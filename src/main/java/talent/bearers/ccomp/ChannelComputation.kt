@@ -2,11 +2,13 @@ package talent.bearers.ccomp
 
 import com.teamwizardry.librarianlib.LibrarianLib
 import com.teamwizardry.librarianlib.common.base.ModCreativeTab
+import net.minecraft.item.ItemStack
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+import talent.bearers.ccomp.common.blocks.ModBlocks
 import talent.bearers.ccomp.common.core.CommonProxy
 
 /**
@@ -29,7 +31,12 @@ object ChannelComputation {
     @Mod.EventHandler fun init(e: FMLInitializationEvent) = proxy.init(e)
     @Mod.EventHandler fun post(e: FMLPostInitializationEvent) = proxy.post(e)
 
-    object Tab : ModCreativeTab() { init {
-        registerDefaultTab()
-    }}
+    object Tab : ModCreativeTab() {
+
+        override val iconStack = ItemStack(ModBlocks.SIGNAL_NODE)
+
+        init {
+            registerDefaultTab()
+        }
+    }
 }
