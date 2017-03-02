@@ -1,0 +1,17 @@
+{
+	"multipart": [
+		{ "when": { "up": "true" }, "apply": { "model": "ccomp:cable_side" } },
+		{ "when": { "down": "true" }, "apply": { "model": "ccomp:cable_side", "x": 180 } },
+		{ "when": { "north": "true" }, "apply": { "model": "ccomp:cable_side", "x": 90 } },
+		{ "when": { "south": "true" }, "apply": { "model": "ccomp:cable_side", "x": 270 } },
+		{ "when": { "east": "true" }, "apply": { "model": "ccomp:cable_side", "x": 90, "y": 90 } },
+		{ "when": { "west": "true" }, "apply": { "model": "ccomp:cable_side", "x": 90, "y": 270 } },
+
+		{ "when": { "up": "false" }, "apply": { "model": "ccomp:cable_noside" } },
+		{ "when": { "down": "false" }, "apply": { "model": "ccomp:cable_noside", "x": 180 } },
+		{ "when": { "north": "false" }, "apply": { "model": "ccomp:cable_noside", "x": 90 } },
+		{ "when": { "south": "false" }, "apply": { "model": "ccomp:cable_noside", "x": 270 } },
+		{ "when": { "east": "false" }, "apply": { "model": "ccomp:cable_noside", "x": 90, "y": 90 } },
+		{ "when": { "west": "false" }, "apply": { "model": "ccomp:cable_noside", "x": 90, "y": 270 } }
+	]
+}
