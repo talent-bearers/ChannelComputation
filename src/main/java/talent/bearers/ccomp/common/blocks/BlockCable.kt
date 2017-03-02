@@ -85,7 +85,8 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
 
     override fun addCollisionBoxToList(state: IBlockState, worldIn: World, pos: BlockPos, entityBox: AxisAlignedBB, collidingBoxes: MutableList<AxisAlignedBB>, entityIn: Entity?) {
         addCollisionBoxToList(pos, entityBox, collidingBoxes, CENTER_AABB)
-        for ((prop, bound) in PROP_TO_AABB.entries) if (state.getValue(prop))
+        val actualState = getActualState(state, worldIn, pos)
+        for ((prop, bound) in PROP_TO_AABB.entries) if (actualState.getValue(prop))
             addCollisionBoxToList(pos, entityBox, collidingBoxes, bound)
     }
 
