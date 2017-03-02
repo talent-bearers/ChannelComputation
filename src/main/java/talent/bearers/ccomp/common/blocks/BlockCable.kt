@@ -8,14 +8,11 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import talent.bearers.ccomp.api.ICableConnectible
 import talent.bearers.ccomp.api.ICrawlableCable
-import talent.bearers.ccomp.api.IDataNode
-import net.minecraft.util.math.AxisAlignedBB
-
 
 
 /**
@@ -63,7 +60,8 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
     }
 
     init {
-        setResistance(1f)
+        setResistance(2f)
+        setLightLevel(0.5f)
         for (state in blockState.validStates) {
             var aabb = CENTER_AABB
             for ((prop, bound) in PROP_TO_AABB.entries) if (state.getValue(prop)) aabb = aabb.union(bound)
