@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import talent.bearers.ccomp.common.blocks.ModBlocks
+import talent.bearers.ccomp.common.items.ModItems
 
 /**
  * @author WireSegal
@@ -12,6 +13,7 @@ import talent.bearers.ccomp.common.blocks.ModBlocks
 open class CommonProxy {
     open fun pre(e: FMLPreInitializationEvent) {
         ModBlocks
+        ModItems
     }
 
     open fun init(e: FMLInitializationEvent) {

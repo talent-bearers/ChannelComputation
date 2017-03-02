@@ -8,4 +8,5 @@ import talent.bearers.ccomp.common.blocks.BlockCable
  */
 object ModBlocks {
     val CABLE = BlockCable()
+    val SIGNAL_NODE = BlockSignalNode()
 }
