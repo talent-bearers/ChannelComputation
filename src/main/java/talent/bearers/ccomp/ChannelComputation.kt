@@ -1,6 +1,7 @@
 package talent.bearers.ccomp
 
 import com.teamwizardry.librarianlib.LibrarianLib
+import com.teamwizardry.librarianlib.common.base.ModCreativeTab
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
@@ -27,4 +28,8 @@ object ChannelComputation {
     @Mod.EventHandler fun pre(e: FMLPreInitializationEvent) = proxy.pre(e)
     @Mod.EventHandler fun init(e: FMLInitializationEvent) = proxy.init(e)
     @Mod.EventHandler fun post(e: FMLPostInitializationEvent) = proxy.post(e)
+
+    object Tab : ModCreativeTab() { init {
+        registerDefaultTab()
+    }}
 }
