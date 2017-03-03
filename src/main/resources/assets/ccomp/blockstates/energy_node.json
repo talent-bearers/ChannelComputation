@@ -1,27 +1,27 @@
 {
 	"variants": {
 		"facing=down": {
-			"model": "ccomp:signal_node",
+			"model": "ccomp:energy_node",
 			"x": 180
 		},
 		"facing=up": {
-			"model": "ccomp:signal_node"
+			"model": "ccomp:energy_node"
 		},
 		"facing=north": {
-			"model": "ccomp:signal_node",
+			"model": "ccomp:energy_node",
 			"x": 90
 		},
 		"facing=south": {
-			"model": "ccomp:signal_node",
+			"model": "ccomp:energy_node",
 			"x": 270
 		},
 		"facing=west": {
-			"model": "ccomp:signal_node",
+			"model": "ccomp:energy_node",
 			"x": 90,
 			"y": 270
 		},
 		"facing=east": {
-			"model": "ccomp:signal_node",
+			"model": "ccomp:energy_node",
 			"x": 90,
 			"y": 90
 		}

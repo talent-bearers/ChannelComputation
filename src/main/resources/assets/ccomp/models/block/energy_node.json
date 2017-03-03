@@ -1,6 +1,6 @@
 {
 	"parent": "ccomp:block/node",
 	"textures": {
-		"texture": "ccomp:blocks/signal_node"
+		"texture": "ccomp:blocks/energy_node"
 	}
 }

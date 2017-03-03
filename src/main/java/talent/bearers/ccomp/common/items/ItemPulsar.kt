@@ -12,9 +12,9 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import talent.bearers.ccomp.api.ICrawlableCable
-import talent.bearers.ccomp.api.IDataNode
-import talent.bearers.ccomp.api.PathCrawler
+import talent.bearers.ccomp.api.pathing.ICrawlableCable
+import talent.bearers.ccomp.api.pathing.IDataNode
+import talent.bearers.ccomp.api.pathing.PathCrawler
 
 /**
  * @author WireSegal

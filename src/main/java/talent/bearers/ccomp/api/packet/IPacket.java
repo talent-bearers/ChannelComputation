@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.api;
+package talent.bearers.ccomp.api.packet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

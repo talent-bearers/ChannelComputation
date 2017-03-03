@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.api;
+package talent.bearers.ccomp.api.pathing;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
@@ -8,6 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import talent.bearers.ccomp.api.pathing.ICrawlableCable;
+import talent.bearers.ccomp.api.pathing.IDataNode;
 
 import java.util.List;
 

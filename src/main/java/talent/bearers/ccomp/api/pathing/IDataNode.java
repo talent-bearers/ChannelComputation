@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.api;
+package talent.bearers.ccomp.api.pathing;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -6,6 +6,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import talent.bearers.ccomp.api.packet.IPacket;
+import talent.bearers.ccomp.api.pathing.ICableConnectible;
+import talent.bearers.ccomp.api.pathing.ICrawlableCable;
 
 /**
  * @author WireSegal
@@ -46,7 +49,8 @@ public interface IDataNode extends ICableConnectible {
 
     /**
      * Push a packet into the target. The remainder from the packet should be returned
-     * as a new packet, with the same general behaviors as the old one. Ghost packets are never pushed.
+     * as a new packet, with the same general behaviors as the old one.
+     * Ghost packets can be safely ignored on push, unless they're signal packets.
      */
     @Nullable
     IPacket pushPacket(@NotNull IPacket packet, @NotNull BlockPos pos, @NotNull World world);

@@ -12,7 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
-import talent.bearers.ccomp.api.ICrawlableCable
+import talent.bearers.ccomp.api.pathing.ICrawlableCable
 
 
 /**

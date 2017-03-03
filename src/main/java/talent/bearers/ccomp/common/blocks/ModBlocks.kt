@@ -9,4 +9,7 @@ import talent.bearers.ccomp.common.blocks.BlockCable
 object ModBlocks {
     val CABLE = BlockCable()
     val SIGNAL_NODE = BlockSignalNode()
+    val ITEM_NODE = BlockItemNode()
+    val FLUID_NODE = BlockFluidNode()
+    val ENERGY_NODE = BlockEnergyNode()
 }

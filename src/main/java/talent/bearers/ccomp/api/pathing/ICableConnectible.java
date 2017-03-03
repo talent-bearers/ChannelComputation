@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.api;
+package talent.bearers.ccomp.api.pathing;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
