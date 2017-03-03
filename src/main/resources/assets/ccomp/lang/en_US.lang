@@ -1,0 +1,18 @@
+item.ccomp:ghost_pulsar.name=Systems Ghost Pulsar
+
+tile.ccomp:fluid_node.name=Direct Data Node - Fluids
+tile.ccomp:energy_node.name=Direct Data Node - Energy
+tile.ccomp:item_node.name=Direct Data Node - Items
+tile.ccomp:signal_node.name=Direct Data Node - Analog Signals
+
+ccomp.command.request.usage=/request-packet <x> <y> <z> <type> <pull|read> <id|pos> ...
+ccomp.command.request.usage.id=/request-packet <x> <y> <z> <type> <pull|read> id <id>
+ccomp.command.request.usage.pos=/request-packet <x> <y> <z> <type> <pull|read> pos <node x> <node y> <node z>
+ccomp.command.request.nonode=No nodes found on network
+ccomp.command.request.bigid=ID too large
+ccomp.command.request.emptypos=No node at that position
+ccomp.command.request.nopacket=No response recieved
+ccomp.command.request.success.type=Found packet of type %s
+ccomp.command.request.success.ghost=Is ghost: %s
+ccomp.command.request.success.size=Size: %s
+ccomp.command.request.success.data=Data: %s

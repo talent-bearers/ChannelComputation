@@ -21,6 +21,10 @@ import talent.bearers.ccomp.api.pathing.PathCrawler
  * Created at 10:47 AM on 3/2/17.
  */
 class ItemPulsar : ItemMod("ghost_pulsar") {
+    init {
+        setMaxStackSize(1)
+    }
+
     override fun onItemUse(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult {
         if (!worldIn.isRemote) {
             playerIn.sendSpamlessMessage(PathCrawler.crawlPath(worldIn, pos).toString(), 1111) // DEBUG

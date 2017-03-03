@@ -5,9 +5,7 @@ import com.teamwizardry.librarianlib.common.base.ModCreativeTab
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.SidedProxy
-import net.minecraftforge.fml.common.event.FMLInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+import net.minecraftforge.fml.common.event.*
 import talent.bearers.ccomp.common.blocks.ModBlocks
 import talent.bearers.ccomp.common.core.CommonProxy
 
@@ -30,4 +28,6 @@ object ChannelComputation {
     @Mod.EventHandler fun pre(e: FMLPreInitializationEvent) = proxy.pre(e)
     @Mod.EventHandler fun init(e: FMLInitializationEvent) = proxy.init(e)
     @Mod.EventHandler fun post(e: FMLPostInitializationEvent) = proxy.post(e)
+
+    @Mod.EventHandler fun onServerStart(e: FMLServerStartingEvent) = proxy.serverStart(e)
 }

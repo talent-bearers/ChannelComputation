@@ -3,6 +3,7 @@ package talent.bearers.ccomp.common.core
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import talent.bearers.ccomp.ChannelComputation
 import talent.bearers.ccomp.common.blocks.ModBlocks
 import talent.bearers.ccomp.common.items.ModItems
@@ -24,5 +25,9 @@ open class CommonProxy {
 
     open fun post(e: FMLPostInitializationEvent) {
 
+    }
+
+    open fun serverStart(e: FMLServerStartingEvent) {
+        e.registerServerCommand(CommandPacket)
     }
 }
