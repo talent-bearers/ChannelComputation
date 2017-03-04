@@ -17,6 +17,7 @@ import talent.bearers.ccomp.api.pathing.PathCrawler
 object CommandPacket : CommandBase() {
     val ACTIONS = listOf("pull", "read")
     val SWAPS = listOf("id", "pos")
+    val TYPES = mutableListOf("signal", "item", "fluid", "energy")
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 7) throw WrongUsageException(getCommandUsage())
@@ -65,9 +66,10 @@ object CommandPacket : CommandBase() {
     override fun getTabCompletionOptions(server: MinecraftServer, sender: ICommandSender, args: Array<out String>, pos: BlockPos?): List<String> {
         return when (args.size) {
             1, 2, 3 -> getTabCompletionCoordinate(args, 0, pos)
-            5 -> ACTIONS
-            6 -> SWAPS
-            7, 8, 9 -> if (args[6] == "pos") getTabCompletionCoordinate(args, 6, pos) else emptyList()
+            5 -> TYPES
+            6 -> ACTIONS
+            7 -> SWAPS
+            8, 9, 10 -> if (args[6] == "pos") getTabCompletionCoordinate(args, 6, pos) else emptyList()
             else -> emptyList()
         }
     }

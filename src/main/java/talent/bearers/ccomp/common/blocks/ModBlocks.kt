@@ -1,7 +1,5 @@
 package talent.bearers.ccomp.common.blocks
 
-import talent.bearers.ccomp.common.blocks.BlockCable
-
 /**
  * @author WireSegal
  * Created at 9:50 PM on 3/1/17.
@@ -12,4 +10,7 @@ object ModBlocks {
     val ITEM_NODE = BlockItemNode()
     val FLUID_NODE = BlockFluidNode()
     val ENERGY_NODE = BlockEnergyNode()
+    val ITEM_LANCER = BlockItemLancer()
+    val FLUID_LANCER = BlockFluidLancer()
+    val ENERGY_LANCER = BlockEnergyLancer()
 }

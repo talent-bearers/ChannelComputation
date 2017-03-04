@@ -5,6 +5,10 @@ tile.ccomp:energy_node.name=Direct Data Node - Energy
 tile.ccomp:item_node.name=Direct Data Node - Items
 tile.ccomp:signal_node.name=Direct Data Node - Analog Signals
 
+tile.ccomp:fluid_lancer.name=Lancing Data Node - Fluids
+tile.ccomp:energy_lancer.name=Lancing Data Node - Energy
+tile.ccomp:item_lancer.name=Lancing Data Node - Items
+
 ccomp.command.request.usage=/request-packet <x> <y> <z> <type> <pull|read> <id|pos> ...
 ccomp.command.request.usage.id=/request-packet <x> <y> <z> <type> <pull|read> id <id>
 ccomp.command.request.usage.pos=/request-packet <x> <y> <z> <type> <pull|read> pos <node x> <node y> <node z>

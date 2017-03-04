@@ -1,0 +1,29 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "ccomp:fluid_lancer",
+			"x": 180
+		},
+		"facing=up": {
+			"model": "ccomp:fluid_lancer"
+		},
+		"facing=north": {
+			"model": "ccomp:fluid_lancer",
+			"x": 90
+		},
+		"facing=south": {
+			"model": "ccomp:fluid_lancer",
+			"x": 270
+		},
+		"facing=west": {
+			"model": "ccomp:fluid_lancer",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east": {
+			"model": "ccomp:fluid_lancer",
+			"x": 90,
+			"y": 90
+		}
+	}
+}

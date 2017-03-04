@@ -1,0 +1,6 @@
+{
+	"parent": "ccomp:block/lancer",
+	"textures": {
+		"texture": "ccomp:blocks/fluid_lancer"
+	}
+}
