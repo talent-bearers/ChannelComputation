@@ -1,5 +1,7 @@
 item.ccomp:ghost_pulsar.name=Systems Ghost Pulsar
 
+tile.ccomp:cable.name=Data Connection Cable
+
 tile.ccomp:fluid_node.name=Direct Data Node - Fluids
 tile.ccomp:energy_node.name=Direct Data Node - Energy
 tile.ccomp:item_node.name=Direct Data Node - Items
