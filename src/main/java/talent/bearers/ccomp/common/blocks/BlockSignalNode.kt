@@ -22,11 +22,16 @@ import java.util.*
 class BlockSignalNode : BlockBaseNode("signal_node") {
     override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
         if (packetType != "signal") return null
+        val facing = connectionPoint(pos, world).opposite
+        return SignalPacket(world.getRedstonePower(pos.offset(facing), facing))
+    }
+
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+        if (packetType != "signal") return null
         val tile = world.getTileEntity(pos) as? TileSignalNode
         tile?.signal = 0.toByte()
         tile?.markDirty()
-        val facing = connectionPoint(pos, world).opposite
-        return SignalPacket(world.getRedstonePower(pos.offset(facing), facing))
+        return requestReadPacket(packetType, strength, pos, world)
     }
 
     companion object {
@@ -39,8 +44,6 @@ class BlockSignalNode : BlockBaseNode("signal_node") {
             worldIn.notifyNeighborsOfStateExcept(blockpos, state.block, enumfacing)
         }
     }
-
-    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World) = null
 
     override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
         if (packet.type != "signal") return packet
