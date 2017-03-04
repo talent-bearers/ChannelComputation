@@ -21,7 +21,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockItemLancer : BlockBaseLancer("item_lancer") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: IBlockAccess): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
         if (packetType == "item") return getPacket(strength, pos, world)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null

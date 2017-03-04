@@ -7,8 +7,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import talent.bearers.ccomp.api.packet.IPacket;
-import talent.bearers.ccomp.api.pathing.ICableConnectible;
-import talent.bearers.ccomp.api.pathing.ICrawlableCable;
 
 /**
  * @author WireSegal
@@ -34,7 +32,7 @@ public interface IDataNode extends ICableConnectible {
      * Request a ghost packet containing the contents from a pull packet.
      */
     @Nullable
-    IPacket requestReadPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull IBlockAccess world);
+    IPacket requestReadPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull World world);
 
     /**
      * Request a packet containing the contents of the target.

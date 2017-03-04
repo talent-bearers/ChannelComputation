@@ -20,12 +20,13 @@ import java.util.*
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockSignalNode : BlockBaseNode("signal_node") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: IBlockAccess): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
         if (packetType != "signal") return null
         val tile = world.getTileEntity(pos) as? TileSignalNode
         tile?.signal = 0.toByte()
         tile?.markDirty()
-        return SignalPacket(world.getStrongPower(pos, connectionPoint(pos, world)))
+        val facing = connectionPoint(pos, world).opposite
+        return SignalPacket(world.getRedstonePower(pos.offset(facing), facing))
     }
 
     companion object {

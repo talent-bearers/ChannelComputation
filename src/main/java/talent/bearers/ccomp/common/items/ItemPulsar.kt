@@ -1,6 +1,7 @@
 package talent.bearers.ccomp.common.items
 
 import com.google.common.collect.Lists
+import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.item.ItemMod
 import com.teamwizardry.librarianlib.common.util.*
 import net.minecraft.entity.player.EntityPlayer
@@ -69,5 +70,11 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
                 playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notonnetwork", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
         }
         return EnumActionResult.SUCCESS
+    }
+
+    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
+        TooltipHelper.tooltipIfShift(tooltip) {
+            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
+        }
     }
 }

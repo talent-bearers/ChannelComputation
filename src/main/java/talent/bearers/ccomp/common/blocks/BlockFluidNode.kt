@@ -16,7 +16,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockFluidNode : BlockBaseNode("fluid_node") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: IBlockAccess): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
         if (packetType == "fluid") return getPacket(strength, pos, world, true)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null

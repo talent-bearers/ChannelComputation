@@ -1,19 +1,28 @@
 item.ccomp:ghost_pulsar.name=Systems Ghost Pulsar
+item.ccomp:ghost_pulsar.desc=Clicking on a cable first and a node second will give you the node's ID. IDs are relative to the cable block selected.
 
 tile.ccomp:cable.name=Data Connection Cable
+tile.ccomp:cable.desc=Connects data nodes and requesting blocks.
 
 tile.ccomp:fluid_node.name=Direct Data Node - Fluids
+tile.ccomp:fluid_node.desc=Can interact with the fluid contents of the block in front of it.
 tile.ccomp:energy_node.name=Direct Data Node - Energy
+tile.ccomp:energy_node.desc=Can interact with the energy contents of the block in front of it.
 tile.ccomp:item_node.name=Direct Data Node - Items
+tile.ccomp:item_node.desc=Can interact with the item contents of the block in front of it.
 tile.ccomp:signal_node.name=Direct Data Node - Analog Signals
+tile.ccomp:signal_node.desc=Can interact with the redstone signals of the block in front of it.
 
 tile.ccomp:fluid_lancer.name=Lancing Data Node - Fluids
+tile.ccomp:fluid_lancer.desc=Can read (but not write) the fluid values of the first fluid storage block within 7 blocks.
 tile.ccomp:energy_lancer.name=Lancing Data Node - Energy
+tile.ccomp:energy_lancer.desc=Can read (but not write) the energy values of the first energy storage block within 7 blocks.
 tile.ccomp:item_lancer.name=Lancing Data Node - Items
+tile.ccomp:item_lancer.desc=Can read (but not write) the item values of the first item storage block within 7 blocks.
 
-ccomp.command.request.usage=/request-packet <x> <y> <z> <type> <pull|read> <id|pos> ...
-ccomp.command.request.usage.id=/request-packet <x> <y> <z> <type> <pull|read> id <id>
-ccomp.command.request.usage.pos=/request-packet <x> <y> <z> <type> <pull|read> pos <node x> <node y> <node z>
+ccomp.command.request.usage=/request-packet <x> <y> <z> <strength> <type> <pull|read> <id|pos> ...
+ccomp.command.request.usage.id=/request-packet <x> <y> <z> <strength> <type> <pull|read> id <id>
+ccomp.command.request.usage.pos=/request-packet <x> <y> <z> <strength> <type> <pull|read> pos <node x> <node y> <node z>
 ccomp.command.request.nonode=No nodes found on network
 ccomp.command.request.bigid=ID too large
 ccomp.command.request.emptypos=No node at that position
@@ -23,7 +32,7 @@ ccomp.command.request.success.ghost=Is ghost: %s
 ccomp.command.request.success.size=Size: %s
 ccomp.command.request.success.data=Data: %s
 
-ccomp.misc.cableselected=This %s has been selected as the target cable. Depending on the cable you selected, IDs may be different.
+ccomp.misc.cableselected=This %s has been selected as the target cable.
 ccomp.misc.notonnetwork=This %s isn't a part of a data network.
 ccomp.misc.notanode=This %s isn't a data node.
 ccomp.misc.notconnected=This %s isn't connected to the cable you selected. This could be because they're too far apart, or you missed a connection.

@@ -1,5 +1,6 @@
 package talent.bearers.ccomp.common.blocks
 
+import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.block.BlockMod
 import net.minecraft.block.material.Material
 import net.minecraft.block.properties.PropertyBool
@@ -7,6 +8,7 @@ import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
@@ -66,6 +68,12 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
             var aabb = CENTER_AABB
             for ((prop, bound) in PROP_TO_AABB.entries) if (state.getValue(prop)) aabb = aabb.union(bound)
             AABBS.put(state, aabb)
+        }
+    }
+
+    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
+        TooltipHelper.tooltipIfShift(tooltip) {
+            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
         }
     }
 

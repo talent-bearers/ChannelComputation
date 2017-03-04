@@ -2,6 +2,7 @@ package talent.bearers.ccomp.common.blocks
 
 import com.teamwizardry.librarianlib.client.core.JsonGenerationUtils
 import com.teamwizardry.librarianlib.client.core.ModelHandler
+import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.IModelGenerator
 import com.teamwizardry.librarianlib.common.base.block.BlockMod
 import com.teamwizardry.librarianlib.common.util.builders.json
@@ -13,6 +14,8 @@ import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumFacing.*
@@ -60,7 +63,11 @@ abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDat
 
     data class NodeTarget(val pos: BlockPos, val facing: EnumFacing, val state: IBlockState, val tile: TileEntity?)
 
-
+    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
+        TooltipHelper.tooltipIfShift(tooltip) {
+            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
+        }
+    }
 
     override fun getBoundingBox(state: IBlockState, source: IBlockAccess?, pos: BlockPos?) = AABBS[state.getValue(FACING)]
 
