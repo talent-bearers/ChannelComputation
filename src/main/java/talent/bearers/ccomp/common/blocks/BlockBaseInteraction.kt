@@ -34,14 +34,14 @@ import talent.bearers.ccomp.api.packet.IPacket
 abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
         val FACING: PropertyDirection = PropertyDirection.create("facing")
-        val UP_AABB    = AxisAlignedBB(5 / 16.0, 6 / 16.0, 5 / 16.0, 11 / 16.0,       1.0, 11 / 16.0)
-        val DOWN_AABB  = AxisAlignedBB(5 / 16.0,      0.0, 5 / 16.0, 11 / 16.0, 10 / 16.0, 11 / 16.0)
+        val UP_AABB    = AxisAlignedBB(5 / 16.0, 9 / 16.0, 5 / 16.0, 11 / 16.0,      1.0, 11 / 16.0)
+        val DOWN_AABB  = AxisAlignedBB(5 / 16.0,      0.0, 5 / 16.0, 11 / 16.0, 6 / 16.0, 11 / 16.0)
 
-        val SOUTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0, 6 / 16.0, 11 / 16.0, 11 / 16.0,       1.0)
-        val NORTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0,      0.0, 11 / 16.0, 11 / 16.0, 10 / 16.0)
+        val SOUTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0, 9 / 16.0, 11 / 16.0, 11 / 16.0,      1.0)
+        val NORTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0,      0.0, 11 / 16.0, 11 / 16.0, 6 / 16.0)
 
-        val EAST_AABB  = AxisAlignedBB(6 / 16.0, 5 / 16.0, 5 / 16.0,       1.0, 11 / 16.0, 11 / 16.0)
-        val WEST_AABB  = AxisAlignedBB(     0.0, 5 / 16.0, 5 / 16.0, 10 / 16.0, 11 / 16.0, 11 / 16.0)
+        val EAST_AABB  = AxisAlignedBB(9 / 16.0, 5 / 16.0, 5 / 16.0,      1.0, 11 / 16.0, 11 / 16.0)
+        val WEST_AABB  = AxisAlignedBB(     0.0, 5 / 16.0, 5 / 16.0, 6 / 16.0, 11 / 16.0, 11 / 16.0)
 
         val AABBS = mapOf(
                 UP to UP_AABB,
