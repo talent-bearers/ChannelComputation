@@ -27,12 +27,12 @@ public final class PathCrawler {
                 found.add(origin);
             return found;
         }
-        crawlPath(world, block, origin, null, found, Lists.newArrayList());
+        crawlPath(world, block, origin, null, found, Lists.newArrayList(), 0);
         return found;
     }
 
-    private static void crawlPath(@NotNull IBlockAccess world, @NotNull Block block, @NotNull BlockPos point, @Nullable EnumFacing from, @NotNull List<BlockPos> found, @NotNull List<BlockPos> crawled) {
-        if (crawled.contains(point)) return;
+    private static void crawlPath(@NotNull IBlockAccess world, @NotNull Block block, @NotNull BlockPos point, @Nullable EnumFacing from, @NotNull List<BlockPos> found, @NotNull List<BlockPos> crawled, int distance) {
+        if (crawled.contains(point) || distance >= 32) return;
         crawled.add(point);
         if (block instanceof IDataNode) {
             found.add(point);
@@ -43,7 +43,7 @@ public final class PathCrawler {
             if (((ICrawlableCable) block).connectedOnSide(facing, point, world)) {
                 BlockPos shift = point.offset(facing);
                 IBlockState state = world.getBlockState(shift);
-                crawlPath(world, state.getBlock(), shift, facing, found, crawled);
+                crawlPath(world, state.getBlock(), shift, facing, found, crawled, distance + 1);
             }
         }
     }

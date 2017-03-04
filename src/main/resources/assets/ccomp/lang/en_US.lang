@@ -22,3 +22,9 @@ ccomp.command.request.success.type=Found packet of type %s
 ccomp.command.request.success.ghost=Is ghost: %s
 ccomp.command.request.success.size=Size: %s
 ccomp.command.request.success.data=Data: %s
+
+ccomp.misc.cableselected=This %s has been selected as the target cable. Depending on the cable you selected, IDs may be different.
+ccomp.misc.notonnetwork=This %s isn't a part of a data network.
+ccomp.misc.notanode=This %s isn't a data node.
+ccomp.misc.notconnected=This %s isn't connected to the cable you selected. This could be because they're too far apart, or you missed a connection.
+ccomp.misc.foundconnection=This %s is connected to the network. From the cable you selected, it has ID %d.
