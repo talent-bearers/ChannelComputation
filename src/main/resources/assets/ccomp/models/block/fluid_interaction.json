@@ -1,0 +1,6 @@
+{
+	"parent": "ccomp:block/interaction",
+	"textures": {
+		"texture": "ccomp:blocks/fluid_interaction"
+	}
+}

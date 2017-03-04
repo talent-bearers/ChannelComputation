@@ -10,7 +10,9 @@ import talent.bearers.ccomp.common.blocks.ModBlocks
  */
 object ModTab : ModCreativeTab() {
 
-    override val iconStack = ItemStack(ModBlocks.SIGNAL_NODE)
+    override val iconStack by lazy {
+        ItemStack(ModBlocks.SIGNAL_NODE)
+    }
 
     init {
         registerDefaultTab()

@@ -1,0 +1,29 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "ccomp:item_interaction",
+			"x": 180
+		},
+		"facing=up": {
+			"model": "ccomp:item_interaction"
+		},
+		"facing=north": {
+			"model": "ccomp:item_interaction",
+			"x": 90
+		},
+		"facing=south": {
+			"model": "ccomp:item_interaction",
+			"x": 270
+		},
+		"facing=west": {
+			"model": "ccomp:item_interaction",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east": {
+			"model": "ccomp:item_interaction",
+			"x": 90,
+			"y": 90
+		}
+	}
+}

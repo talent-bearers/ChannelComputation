@@ -1,5 +1,6 @@
 package talent.bearers.ccomp.common.blocks
 
+import com.google.common.collect.Lists
 import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.block.BlockMod
 import net.minecraft.block.material.Material
@@ -12,6 +13,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.RayTraceResult
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import talent.bearers.ccomp.api.pathing.ICrawlableCable
@@ -71,6 +74,19 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
         }
     }
 
+    fun getBoxes(state: IBlockState, worldIn: World, pos: BlockPos): List<AxisAlignedBB> {
+        val ret = mutableListOf(CENTER_AABB)
+        val actualState = getActualState(state, worldIn, pos)
+        for ((prop, bound) in PROP_TO_AABB.entries) if (actualState.getValue(prop))
+            ret.add(bound)
+        return ret
+    }
+
+    override fun collisionRayTrace(blockState: IBlockState, worldIn: World, pos: BlockPos, start: Vec3d, end: Vec3d): RayTraceResult? {
+        return getBoxes(blockState, worldIn, pos).mapNotNull { rayTrace(pos, start, end, it) }.maxBy { it.hitVec.squareDistanceTo(end) }
+    }
+
+
     override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
         TooltipHelper.tooltipIfShift(tooltip) {
             TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
@@ -87,13 +103,10 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
     }
 
     override fun getBoundingBox(state: IBlockState, source: IBlockAccess, pos: BlockPos)
-            = AABBS[getActualState(state, source, pos)]
+            = AABBS[getActualState(state, source, pos)] ?: CENTER_AABB
 
     override fun addCollisionBoxToList(state: IBlockState, worldIn: World, pos: BlockPos, entityBox: AxisAlignedBB, collidingBoxes: MutableList<AxisAlignedBB>, entityIn: Entity?) {
-        addCollisionBoxToList(pos, entityBox, collidingBoxes, CENTER_AABB)
-        val actualState = getActualState(state, worldIn, pos)
-        for ((prop, bound) in PROP_TO_AABB.entries) if (actualState.getValue(prop))
-            addCollisionBoxToList(pos, entityBox, collidingBoxes, bound)
+        for (box in getBoxes(state, worldIn, pos)) addCollisionBoxToList(pos, entityBox, collidingBoxes, box)
     }
 
     override fun createBlockState() = BlockStateContainer(this, UP, DOWN, WEST, EAST, NORTH, SOUTH)

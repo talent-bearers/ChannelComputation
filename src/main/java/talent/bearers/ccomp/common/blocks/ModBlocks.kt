@@ -13,4 +13,6 @@ object ModBlocks {
     val ITEM_LANCER = BlockItemLancer()
     val FLUID_LANCER = BlockFluidLancer()
     val ENERGY_LANCER = BlockEnergyLancer()
+    val ITEM_INTERACTION = BlockItemInteraction()
+    val FLUID_INTERACTION = BlockFluidInteraction()
 }
