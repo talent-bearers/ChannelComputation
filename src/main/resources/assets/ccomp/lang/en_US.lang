@@ -27,9 +27,7 @@ tile.ccomp:fluid_interaction.desc=Catn read and write fluids from a fluid block 
 tile.ccomp:item_interaction.name=Interactive Data Node - Items
 tile.ccomp:item_interaction.desc=Can read and write block items from the block in front of it. It can only write in 1 strength intervals.
 
-ccomp.command.request.usage=/request-packet <x> <y> <z> <strength> <type> <pull|read> <id|pos> ...
-ccomp.command.request.usage.id=/request-packet <x> <y> <z> <strength> <type> <pull|read> id <id>
-ccomp.command.request.usage.pos=/request-packet <x> <y> <z> <strength> <type> <pull|read> pos <node x> <node y> <node z>
+ccomp.command.request.usage=/request-packet <x> <y> <z> <strength> <type> <pull|read> <id>
 ccomp.command.request.nonode=No nodes found on network
 ccomp.command.request.bigid=ID too large
 ccomp.command.request.emptypos=No node at that position
@@ -38,6 +36,10 @@ ccomp.command.request.success.type=Found packet of type %s
 ccomp.command.request.success.ghost=Is ghost: %s
 ccomp.command.request.success.size=Size: %s
 ccomp.command.request.success.data=Data: %s
+
+ccomp.command.channel.usage=/channel-packet <x> <y> <z> <strength> <type> <id from> <id to>
+ccomp.command.channel.success.size=Response size: %s
+ccomp.command.channel.success.data=Response data: %s
 
 ccomp.misc.cableselected=This %s has been selected as the target cable.
 ccomp.misc.notonnetwork=This %s isn't a part of a data network.

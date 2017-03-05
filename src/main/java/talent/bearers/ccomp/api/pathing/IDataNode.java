@@ -48,7 +48,7 @@ public interface IDataNode extends ICableConnectible {
     /**
      * Push a packet into the target. The remainder from the packet should be returned
      * as a new packet, with the same general behaviors as the old one.
-     * Ghost packets can be safely ignored on push, unless they're signal packets.
+     * Ghost packets are never passed to this method unless they're signal packets.
      */
     @Nullable
     IPacket pushPacket(@NotNull IPacket packet, @NotNull BlockPos pos, @NotNull World world);

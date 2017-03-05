@@ -1,8 +1,6 @@
 package talent.bearers.ccomp.common.core
 
 import net.minecraft.command.CommandBase
-import net.minecraft.command.CommandBase.getListOfStringsMatchingLastWord
-import net.minecraft.command.CommandBase.getTabCompletionCoordinate
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
 import net.minecraft.command.WrongUsageException
@@ -11,15 +9,13 @@ import net.minecraft.util.math.BlockPos
 import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.pathing.PathCrawler
-import talent.bearers.ccomp.common.core.CommandPacket.ACTIONS
 
 /**
  * @author WireSegal
  * Created at 3:01 PM on 3/3/17.
  */
-object CommandPacket : CommandBase() {
-    val ACTIONS = listOf("pull", "read")
-    val TYPES = mutableListOf("signal", "item", "fluid", "energy")
+object CommandPortForward : CommandBase() {
+    val FORWARDING_TYPES = mutableListOf("signal")
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 7) throw WrongUsageException(getCommandUsage())
@@ -27,25 +23,24 @@ object CommandPacket : CommandBase() {
         val pos = parseBlockPos(sender, args, 0, false)
         val strength = parseInt(args[3])
         val type = args[4]
-        val action = args[5]
-        if (action !in ACTIONS) throw WrongUsageException(getCommandUsage())
-
 
         val nodes = PathCrawler.crawlPath(sender.entityWorld, pos)
         if (nodes.isEmpty())
             throw CommandException("$MODID.command.request.nonode")
 
-        val id = parseInt(args[6], 0)
-        if (nodes.size <= id)
+        val idFrom = parseInt(args[5], 0)
+        if (nodes.size <= idFrom)
             throw CommandException("$MODID.command.request.bigid")
-        val node = nodes[id]
+        val nodeFrom = nodes[idFrom]
 
-        val state = sender.entityWorld.getBlockState(node)
+        val idTo = parseInt(args[6], 0)
+        if (nodes.size <= idTo)
+            throw CommandException("$MODID.command.request.bigid")
+        val nodeTo = nodes[idTo]
+
+        val state = sender.entityWorld.getBlockState(nodeFrom)
         val block = state.block as IDataNode
-        val packet = if (action == "pull")
-            block.requestPullPacket(type, strength, node, sender.entityWorld)
-        else
-            block.requestReadPacket(type, strength, node, sender.entityWorld)
+        val packet = block.requestPullPacket(type, strength, nodeFrom, sender.entityWorld)
 
         if (packet == null)
             notifyCommandListener(sender, this, "$MODID.command.request.nopacket")
@@ -54,19 +49,31 @@ object CommandPacket : CommandBase() {
             notifyCommandListener(sender, this, "$MODID.command.request.success.ghost", packet.isGhost)
             notifyCommandListener(sender, this, "$MODID.command.request.success.size", packet.size)
             notifyCommandListener(sender, this, "$MODID.command.request.success.data", packet.data)
+
+            if (!packet.isGhost && packet.type !in FORWARDING_TYPES) {
+                val toState = sender.entityWorld.getBlockState(nodeTo)
+                val toBlock = toState.block as IDataNode
+                val result = toBlock.pushPacket(packet, nodeTo, sender.entityWorld)
+
+                if (result == null)
+                    notifyCommandListener(sender, this, "$MODID.command.request.nopacket")
+                else {
+                    notifyCommandListener(sender, this, "$MODID.command.channel.success.size", result.size)
+                    notifyCommandListener(sender, this, "$MODID.command.channel.success.data", result.data)
+                }
+            }
         }
     }
 
     override fun getTabCompletionOptions(server: MinecraftServer, sender: ICommandSender, args: Array<out String>, pos: BlockPos?): List<String> {
         return when (args.size) {
             1, 2, 3 -> getTabCompletionCoordinate(args, 0, pos)
-            5 -> getListOfStringsMatchingLastWord(args, TYPES)
-            6 -> getListOfStringsMatchingLastWord(args, ACTIONS)
+            5 -> getListOfStringsMatchingLastWord(args, CommandPacket.TYPES)
             else -> emptyList()
         }
     }
 
-    override fun getCommandName() = "request-packet"
-    fun getCommandUsage() = "$MODID.command.request.usage"
+    override fun getCommandName() = "channel-packet"
+    fun getCommandUsage() = "$MODID.command.channel.usage"
     override fun getCommandUsage(sender: ICommandSender?) = getCommandUsage()
 }

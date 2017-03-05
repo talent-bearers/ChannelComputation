@@ -29,5 +29,6 @@ open class CommonProxy {
 
     open fun serverStart(e: FMLServerStartingEvent) {
         e.registerServerCommand(CommandPacket)
+        e.registerServerCommand(CommandPortForward)
     }
 }

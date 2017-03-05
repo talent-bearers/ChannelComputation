@@ -67,14 +67,15 @@ class BlockFluidInteraction : BlockBaseInteraction("fluid_interaction") {
         val target = getTarget(pos, world)
         val fluids = FluidPacket.getFluids(packet)
 
-        val first = fluids.firstOrNull { it.amount >= Fluid.BUCKET_VOLUME }?.copy() ?:
-            return if (fluids.isEmpty()) null else packet
+        val firstOrig = fluids.firstOrNull { it.amount >= Fluid.BUCKET_VOLUME }
+        val first = firstOrig?.copy() ?:
+                return if (fluids.isEmpty()) null else packet
 
         val success = FluidUtil.tryPlaceFluid(null, world, first, target.pos)
         if (success) {
             world.playSound(null, target.pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1f, 1f)
             val newFirstSize = first.amount - Fluid.BUCKET_VOLUME
-            val others = fluids.filter { it !== first }
+            val others = fluids.filter { it !== firstOrig }
             if (newFirstSize != 0) {
                 val newFirst = first.copy()
                 newFirst.amount = newFirstSize

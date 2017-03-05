@@ -3,6 +3,7 @@ package talent.bearers.ccomp.common.blocks
 import com.mojang.authlib.GameProfile
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
@@ -55,12 +56,21 @@ class BlockItemInteraction : BlockBaseInteraction("item_interaction") {
         val player = FakePlayer(world, profile)
         player.rotationYaw = target.facing.horizontalAngle
         player.rotationPitch = if (target.facing == EnumFacing.UP) -90f else if (target.facing == EnumFacing.DOWN) 90f else 0f
+        player.posX = target.pos.x + 0.5
+        player.posY = target.pos.y + 0.5 - player.eyeHeight
+        player.posZ = target.pos.z + 0.5
         val items = ItemPacket.getItems(packet)
-        val first = items.firstOrNull() ?: return null
+        val firstOrig = items.firstOrNull() ?: return packet
+        var first = firstOrig.copy()
+
         player.setHeldItem(EnumHand.MAIN_HAND, first)
-        val result = first.useItemRightClick(world, player, EnumHand.MAIN_HAND)
-        val results = items.filter { it !== first }.toMutableList()
-        if (!result.result.isEmpty) results.add(result.result)
+        val result = first.onItemUse(player, world, target.pos, EnumHand.MAIN_HAND, target.facing, 0f, 0f, 0f)
+        if (result == EnumActionResult.PASS) {
+            first = firstOrig.copy()
+            first = first.useItemRightClick(world, player, EnumHand.MAIN_HAND).result
+        }
+        val results = items.filter { it !== firstOrig }.toMutableList()
+        if (!first.isEmpty) results.add(first)
         if (results.isEmpty()) return null
         return ItemPacket(results)
     }
