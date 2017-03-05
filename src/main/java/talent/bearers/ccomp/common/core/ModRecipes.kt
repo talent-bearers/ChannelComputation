@@ -2,6 +2,7 @@ package talent.bearers.ccomp.common.core
 
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
+import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fml.common.registry.GameRegistry
@@ -40,9 +41,9 @@ object ModRecipes {
             }
         }
 
-        shapelessRecipe(ItemStack(ModItems.METAL, 2, 1),
+        shapelessRecipe(ItemStack(ModItems.METAL, 4, 1),
                 if (OreDictionary.doesOreNameExist("dustIron")) "dustIron" else "ingotIron",
-                "dustRedstone", "nuggetGold", "gunpowder")
+                "dustRedstone", "nuggetGold", "gunpowder", ItemStack(Items.COAL, 1, 1))
 
         furnaceRecipe(ItemStack(ModItems.METAL, 1, 0), ItemStack(ModItems.METAL, 1, 1), 0.1f)
 
@@ -124,7 +125,7 @@ object ModRecipes {
                 'S', "diskSignalIn",
                 'F', Blocks.DROPPER)
 
-        shapedRecipe(ItemStack(ModBlocks.CABLE, 8),
+        shapedRecipe(ItemStack(ModBlocks.CABLE, 16),
                 " D ",
                 "DCD",
                 " D ",
