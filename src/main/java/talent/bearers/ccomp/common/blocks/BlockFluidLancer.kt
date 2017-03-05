@@ -3,6 +3,7 @@ package talent.bearers.ccomp.common.blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.energy.CapabilityEnergy
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
@@ -17,7 +18,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockFluidLancer : BlockBaseLancer("fluid_lancer") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType == "fluid") return getPacket(strength, pos, world)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null

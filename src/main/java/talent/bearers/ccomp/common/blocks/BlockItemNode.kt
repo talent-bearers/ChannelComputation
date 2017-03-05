@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import net.minecraftforge.items.CapabilityItemHandler
@@ -21,7 +22,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockItemNode : BlockBaseNode("item_node") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType == "item") return getPacket(strength, pos, world, true)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null
@@ -64,10 +65,10 @@ class BlockItemNode : BlockBaseNode("item_node") {
         return inSlot.maxStackSize - result.count
     }
 
-    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World)
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)
             = if (packetType == "item") getPacket(strength, pos, world, false) else null
 
-    override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
+    override fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer): IPacket? {
         if (packet.type != "item") return packet
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)) return packet

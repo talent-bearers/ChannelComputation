@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.event.ForgeEventFactory
 import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
@@ -20,13 +21,13 @@ import java.util.*
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockSignalNode : BlockBaseNode("signal_node") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType != "signal") return null
         val facing = connectionPoint(pos, world).opposite
         return SignalPacket(world.getRedstonePower(pos.offset(facing), facing))
     }
 
-    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType != "signal") return null
         val tile = world.getTileEntity(pos) as? TileSignalNode
         tile?.signal = 0.toByte()
@@ -45,7 +46,7 @@ class BlockSignalNode : BlockBaseNode("signal_node") {
         }
     }
 
-    override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
+    override fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer): IPacket? {
         if (packet.type != "signal") return packet
         val tile = world.getTileEntity(pos) as? TileSignalNode
         tile?.signal = SignalPacket.getStrength(packet).toByte()

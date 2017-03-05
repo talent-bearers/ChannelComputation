@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.command.WrongUsageException
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.WorldServer
 import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.pathing.PathCrawler
@@ -19,6 +20,8 @@ object CommandPortForward : CommandBase() {
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 7) throw WrongUsageException(getCommandUsage())
+
+        val world = sender.entityWorld as? WorldServer ?: throw CommandException("this ought to be impossible")
 
         val pos = parseBlockPos(sender, args, 0, false)
         val strength = parseInt(args[3])
@@ -40,7 +43,7 @@ object CommandPortForward : CommandBase() {
 
         val state = sender.entityWorld.getBlockState(nodeFrom)
         val block = state.block as IDataNode
-        val packet = block.requestPullPacket(type, strength, nodeFrom, sender.entityWorld)
+        val packet = block.requestPullPacket(type, strength, nodeFrom, world)
 
         if (packet == null)
             notifyCommandListener(sender, this, "$MODID.command.request.nopacket")
@@ -53,7 +56,7 @@ object CommandPortForward : CommandBase() {
             if (!packet.isGhost || packet.type in FORWARDING_TYPES) {
                 val toState = sender.entityWorld.getBlockState(nodeTo)
                 val toBlock = toState.block as IDataNode
-                val result = toBlock.pushPacket(packet, nodeTo, sender.entityWorld)
+                val result = toBlock.pushPacket(packet, nodeTo, world)
 
                 if (result == null)
                     notifyCommandListener(sender, this, "$MODID.command.request.nopacket")

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import net.minecraftforge.items.CapabilityItemHandler
@@ -21,7 +22,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockItemLancer : BlockBaseLancer("item_lancer") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType == "item") return getPacket(strength, pos, world)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null

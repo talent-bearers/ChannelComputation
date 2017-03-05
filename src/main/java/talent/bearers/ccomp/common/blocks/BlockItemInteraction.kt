@@ -27,7 +27,7 @@ class BlockItemInteraction : BlockBaseInteraction("item_interaction") {
         val profile = GameProfile(UUID.fromString("7C1C207B-1413-4B13-813F-4464C44A509D"), "[InteractionNode]")
     }
 
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType == "signal") return SignalPacket(if (shouldBreak(getTarget(pos, world), world)) 15 else 0)
         else if (packetType == "item") return getPacketForDrops(pos, world, true)
         return null
@@ -47,11 +47,11 @@ class BlockItemInteraction : BlockBaseInteraction("item_interaction") {
         return ItemPacket(drops, ghost)
     }
 
-    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World)
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)
             = if (packetType == "item") getPacketForDrops(pos, world, false) else null
 
-    override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
-        if (packet.type != "item" || world !is WorldServer) return packet
+    override fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer): IPacket? {
+        if (packet.type != "item") return packet
         val target = getTarget(pos, world)
         val items = ItemPacket.getItems(packet)
         val firstOrig = items.firstOrNull() ?: return packet

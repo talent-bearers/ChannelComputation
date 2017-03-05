@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.command.WrongUsageException
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.WorldServer
 import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.pathing.PathCrawler
@@ -23,6 +24,8 @@ object CommandPacket : CommandBase() {
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 7) throw WrongUsageException(getCommandUsage())
+
+        val world = sender.entityWorld as? WorldServer ?: throw CommandException("this ought to be impossible")
 
         val pos = parseBlockPos(sender, args, 0, false)
         val strength = parseInt(args[3])
@@ -43,9 +46,9 @@ object CommandPacket : CommandBase() {
         val state = sender.entityWorld.getBlockState(node)
         val block = state.block as IDataNode
         val packet = if (action == "pull")
-            block.requestPullPacket(type, strength, node, sender.entityWorld)
+            block.requestPullPacket(type, strength, node, world)
         else
-            block.requestReadPacket(type, strength, node, sender.entityWorld)
+            block.requestReadPacket(type, strength, node, world)
 
         if (packet == null)
             notifyCommandListener(sender, this, "$MODID.command.request.nopacket")

@@ -24,6 +24,7 @@ import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.packet.IPacket
 
@@ -76,8 +77,8 @@ abstract class BlockBaseLancer(name: String) : BlockMod(name, Material.IRON), ID
     }
 
     // Lancers are read-only.
-    override final fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World) = null
-    override final fun pushPacket(packet: IPacket, pos: BlockPos, world: World) = packet
+    override final fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer) = null
+    override final fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer) = packet
 
     override fun getBoundingBox(state: IBlockState, source: IBlockAccess?, pos: BlockPos?) = AABBS[state.getValue(FACING)]
 

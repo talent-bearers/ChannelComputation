@@ -5,6 +5,7 @@ import net.minecraft.init.SoundEvents
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import net.minecraft.world.WorldServer
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.FluidUtil
@@ -18,7 +19,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * Created at 11:00 AM on 3/2/17.
  */
 class BlockFluidInteraction : BlockBaseInteraction("fluid_interaction") {
-    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: World): IPacket? {
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
         if (packetType == "fluid") return getPacket(strength, pos, world, true)
         else if (packetType == "signal") return getTotalStrength(pos, world)
         return null
@@ -59,10 +60,10 @@ class BlockFluidInteraction : BlockBaseInteraction("fluid_interaction") {
         return SignalPacket(percent)
     }
 
-    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: World)
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)
             = if (packetType == "fluid") getPacket(strength, pos, world, false) else null
 
-    override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
+    override fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer): IPacket? {
         if (packet.type != "fluid") return packet
         val target = getTarget(pos, world)
         val fluids = FluidPacket.getFluids(packet)

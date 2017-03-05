@@ -3,7 +3,7 @@ package talent.bearers.ccomp.api.pathing;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import talent.bearers.ccomp.api.packet.IPacket;
@@ -32,7 +32,7 @@ public interface IDataNode extends ICableConnectible {
      * Request a ghost packet containing the contents from a pull packet.
      */
     @Nullable
-    IPacket requestReadPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull World world);
+    IPacket requestReadPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull WorldServer world);
 
     /**
      * Request a packet containing the contents of the target.
@@ -43,7 +43,7 @@ public interface IDataNode extends ICableConnectible {
      * or has nothing to be pulled, it should return null.
      */
     @Nullable
-    IPacket requestPullPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull World world);
+    IPacket requestPullPacket(@NotNull String packetType, int strength, @NotNull BlockPos pos, @NotNull WorldServer world);
 
     /**
      * Push a packet into the target. The remainder from the packet should be returned
@@ -51,5 +51,5 @@ public interface IDataNode extends ICableConnectible {
      * Ghost packets are never passed to this method unless they're signal packets.
      */
     @Nullable
-    IPacket pushPacket(@NotNull IPacket packet, @NotNull BlockPos pos, @NotNull World world);
+    IPacket pushPacket(@NotNull IPacket packet, @NotNull BlockPos pos, @NotNull WorldServer world);
 }
