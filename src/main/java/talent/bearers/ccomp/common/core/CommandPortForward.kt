@@ -19,6 +19,8 @@ import talent.bearers.ccomp.api.pathing.PathCrawler
 object CommandPortForward : CommandBase() {
     val FORWARDING_TYPES = mutableListOf("signal")
 
+    override fun getRequiredPermissionLevel() = 2
+
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 6) throw WrongUsageException(getCommandUsage())
 

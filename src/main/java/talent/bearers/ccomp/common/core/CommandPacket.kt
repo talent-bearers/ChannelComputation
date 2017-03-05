@@ -22,6 +22,8 @@ object CommandPacket : CommandBase() {
     val ACTIONS = listOf("pull", "read")
     val TYPES = mutableListOf("signal", "item", "fluid", "energy")
 
+    override fun getRequiredPermissionLevel() = 2
+
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
         if (args.size < 7) throw WrongUsageException(getCommandUsage())
 
