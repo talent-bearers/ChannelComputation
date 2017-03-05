@@ -54,7 +54,10 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
 
 
         fun getTarget(pos: BlockPos, worldIn: IBlockAccess): BlockBaseNode.NodeTarget {
-            return BlockBaseNode.getTarget(pos, worldIn)
+            val thisState = worldIn.getBlockState(pos)
+            val thisFacing = thisState.getValue(FACING).opposite
+            val shift = pos.offset(thisFacing)
+            return BlockBaseNode.NodeTarget(shift, thisFacing, worldIn.getBlockState(shift), worldIn.getTileEntity(shift))
         }
     }
 

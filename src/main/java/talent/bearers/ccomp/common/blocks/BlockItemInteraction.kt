@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.FakePlayer
 import net.minecraftforge.common.util.FakePlayerFactory
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.core.EMPTY
 import talent.bearers.ccomp.common.core.isEmpty
 import talent.bearers.ccomp.common.packets.ItemPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
@@ -65,13 +66,12 @@ class BlockItemInteraction : BlockBaseInteraction("item_interaction") {
         player.posZ = target.pos.z + 0.5
 
         player.setHeldItem(EnumHand.MAIN_HAND, first)
-        val result = first.onItemUse(player, world, target.pos, EnumHand.MAIN_HAND, target.facing, 0f, 0f, 0f)
+        val result = first.onItemUse(player, world, target.pos, EnumHand.MAIN_HAND, target.facing.opposite, 0f, 0f, 0f)
         if (result == EnumActionResult.PASS) {
             first = firstOrig.copy()
             first = first.useItemRightClick(world, player, EnumHand.MAIN_HAND).result
         }
-        val results = items.filter { it !== firstOrig }.toMutableList()
-        if (!first.isEmpty) results.add(first)
+        val results = items.mapNotNull { if (it !== firstOrig) it else if (first.isEmpty) EMPTY else first }.toMutableList()
         if (results.isEmpty()) return null
         return ItemPacket(results)
     }

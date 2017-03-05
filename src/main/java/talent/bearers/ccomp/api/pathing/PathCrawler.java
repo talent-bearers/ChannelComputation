@@ -28,6 +28,7 @@ public final class PathCrawler {
             return found;
         }
         crawlPath(world, block, origin, null, found, Lists.newArrayList(), 0);
+        found.sort((pos1, pos2) -> (int) (pos1.distanceSq(origin) - pos2.distanceSq(origin)));
         return found;
     }
 
