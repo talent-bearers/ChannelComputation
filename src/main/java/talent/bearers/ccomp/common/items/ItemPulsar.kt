@@ -20,6 +20,7 @@ import net.minecraft.util.text.TextComponentTranslation
 import net.minecraft.util.text.TextFormatting
 import net.minecraft.world.World
 import talent.bearers.ccomp.MODID
+import talent.bearers.ccomp.api.misc.IPulsarUsable
 import talent.bearers.ccomp.api.pathing.ICableConnectible
 import talent.bearers.ccomp.api.pathing.ICrawlableCable
 import talent.bearers.ccomp.api.pathing.IDataNode
@@ -66,6 +67,8 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
                             playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.foundconnection", pick.textComponent, index), CHANNEL_ID)
                     }
                 }
+            } else if (block.block is IPulsarUsable) {
+                return (block.block as IPulsarUsable).onPulsarUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)
             } else
                 playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notonnetwork", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
         }

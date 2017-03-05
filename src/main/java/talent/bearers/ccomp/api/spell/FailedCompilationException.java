@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.api;
+package talent.bearers.ccomp.api.spell;
 
 import kotlin.Pair;
 
