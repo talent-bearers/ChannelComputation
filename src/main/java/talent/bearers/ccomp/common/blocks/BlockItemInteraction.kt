@@ -53,15 +53,16 @@ class BlockItemInteraction : BlockBaseInteraction("item_interaction") {
     override fun pushPacket(packet: IPacket, pos: BlockPos, world: World): IPacket? {
         if (packet.type != "item" || world !is WorldServer) return packet
         val target = getTarget(pos, world)
+        val items = ItemPacket.getItems(packet)
+        val firstOrig = items.firstOrNull() ?: return packet
+        var first = firstOrig.copy()
+
         val player = FakePlayer(world, profile)
         player.rotationYaw = target.facing.horizontalAngle
         player.rotationPitch = if (target.facing == EnumFacing.UP) -90f else if (target.facing == EnumFacing.DOWN) 90f else 0f
         player.posX = target.pos.x + 0.5
         player.posY = target.pos.y + 0.5 - player.eyeHeight
         player.posZ = target.pos.z + 0.5
-        val items = ItemPacket.getItems(packet)
-        val firstOrig = items.firstOrNull() ?: return packet
-        var first = firstOrig.copy()
 
         player.setHeldItem(EnumHand.MAIN_HAND, first)
         val result = first.onItemUse(player, world, target.pos, EnumHand.MAIN_HAND, target.facing, 0f, 0f, 0f)
