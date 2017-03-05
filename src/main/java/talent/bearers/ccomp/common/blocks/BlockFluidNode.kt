@@ -31,7 +31,7 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
         for (i in capability.tankProperties) {
             val stack = i.contents ?: continue
             val taken = capability.drain(stack, !ghost)
-            if (taken != null && taken.amount == 0) {
+            if (taken != null && taken.amount != 0) {
                 fluids.add(taken)
                 toTake -= taken.amount
             }

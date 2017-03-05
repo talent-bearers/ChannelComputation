@@ -66,9 +66,9 @@ object CommandPacket : CommandBase() {
     override fun getTabCompletionOptions(server: MinecraftServer, sender: ICommandSender, args: Array<out String>, pos: BlockPos?): List<String> {
         return when (args.size) {
             1, 2, 3 -> getTabCompletionCoordinate(args, 0, pos)
-            5 -> TYPES
-            6 -> ACTIONS
-            7 -> SWAPS
+            5 -> getListOfStringsMatchingLastWord(args, TYPES)
+            6 -> getListOfStringsMatchingLastWord(args, ACTIONS)
+            7 -> getListOfStringsMatchingLastWord(args, SWAPS)
             8, 9, 10 -> if (args[6] == "pos") getTabCompletionCoordinate(args, 6, pos) else emptyList()
             else -> emptyList()
         }

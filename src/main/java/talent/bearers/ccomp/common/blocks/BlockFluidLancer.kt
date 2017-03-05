@@ -34,7 +34,7 @@ class BlockFluidLancer : BlockBaseLancer("fluid_lancer") {
         for (i in capability.tankProperties) {
             val stack = i.contents ?: continue
             val taken = capability.drain(stack, false)
-            if (taken != null && taken.amount == 0) {
+            if (taken != null && taken.amount != 0) {
                 fluids.add(taken)
                 toTake -= taken.amount
             }
