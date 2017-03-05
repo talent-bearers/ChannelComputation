@@ -1,0 +1,8 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "ccomp:items/disk",
+		"layer1": "ccomp:items/disk_out",
+		"layer2": "ccomp:items/disk_overlay"
+	}
+}
