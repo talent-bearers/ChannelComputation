@@ -70,6 +70,10 @@ abstract class BlockBaseLancer(name: String) : BlockMod(name, Material.IRON), ID
         }
     }
 
+    init {
+        blockHardness = 1f
+    }
+
     override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
         TooltipHelper.tooltipIfShift(tooltip) {
             TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")

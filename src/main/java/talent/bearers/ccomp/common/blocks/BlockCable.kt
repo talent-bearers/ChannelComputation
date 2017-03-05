@@ -65,7 +65,7 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
     }
 
     init {
-        setResistance(2f)
+        setHardness(1f)
         setLightLevel(0.5f)
         for (state in blockState.validStates) {
             var aabb = CENTER_AABB

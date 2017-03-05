@@ -61,6 +61,10 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
         }
     }
 
+    init {
+        blockHardness = 1f
+    }
+
     override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
         TooltipHelper.tooltipIfShift(tooltip) {
             TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")

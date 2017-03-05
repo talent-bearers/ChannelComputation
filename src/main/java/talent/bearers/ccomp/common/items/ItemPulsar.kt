@@ -5,13 +5,12 @@ import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.item.ItemMod
 import com.teamwizardry.librarianlib.common.util.*
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.init.Blocks
+import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagInt
 import net.minecraft.nbt.NBTTagList
-import net.minecraft.util.ActionResult
-import net.minecraft.util.EnumActionResult
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
+import net.minecraft.util.*
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.Vec3d
@@ -43,34 +42,43 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
         val block = worldIn.getBlockState(pos)
         val pick = block.block.getPickBlock(block, RayTraceResult(RayTraceResult.Type.BLOCK, vec(hitX, hitY, hitZ), facing, pos), worldIn, pos, playerIn)
         if (block.block is ICableConnectible) {
-            if (block.block is ICrawlableCable) {
+            if (playerIn.isSneaking) {
                 if (!worldIn.isRemote) {
-                    ItemNBTHelper.setList(stack, TAG_POS, NBTTagList().apply {
-                        appendTag(NBTTagInt(pos.x))
-                        appendTag(NBTTagInt(pos.y))
-                        appendTag(NBTTagInt(pos.z))
-                    })
-                    playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.cableselected", pick.textComponent), CHANNEL_ID)
+                    block.block.dropBlockAsItem(worldIn, pos, block, 0)
+                    worldIn.setBlockState(pos, Blocks.AIR.defaultState)
+                    worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f)
                 }
                 return EnumActionResult.SUCCESS
             } else {
-                if (block.block !is IDataNode) {
-                    if (!worldIn.isRemote)
-                        playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notanode", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
-                    return EnumActionResult.FAIL
-                } else {
+                if (block.block is ICrawlableCable) {
                     if (!worldIn.isRemote) {
-                        val cable = ItemNBTHelper.getList(stack, TAG_POS, NBTTypes.INT, false)?.run {
-                            BlockPos(getIntAt(0), getIntAt(1), getIntAt(2))
-                        } ?: return EnumActionResult.SUCCESS
-                        val nodes = PathCrawler.crawlPath(worldIn, cable)
-                        val index = nodes.indexOf(pos)
-                        if (index == -1)
-                            playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notconnected", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
-                        else
-                            playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.foundconnection", pick.textComponent, index), CHANNEL_ID)
+                        ItemNBTHelper.setList(stack, TAG_POS, NBTTagList().apply {
+                            appendTag(NBTTagInt(pos.x))
+                            appendTag(NBTTagInt(pos.y))
+                            appendTag(NBTTagInt(pos.z))
+                        })
+                        playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.cableselected", pick.textComponent), CHANNEL_ID)
                     }
                     return EnumActionResult.SUCCESS
+                } else {
+                    if (block.block !is IDataNode) {
+                        if (!worldIn.isRemote)
+                            playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notanode", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
+                        return EnumActionResult.FAIL
+                    } else {
+                        if (!worldIn.isRemote) {
+                            val cable = ItemNBTHelper.getList(stack, TAG_POS, NBTTypes.INT, false)?.run {
+                                BlockPos(getIntAt(0), getIntAt(1), getIntAt(2))
+                            } ?: return EnumActionResult.SUCCESS
+                            val nodes = PathCrawler.crawlPath(worldIn, cable)
+                            val index = nodes.indexOf(pos)
+                            if (index == -1)
+                                playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notconnected", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
+                            else
+                                playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.foundconnection", pick.textComponent, index), CHANNEL_ID)
+                        }
+                        return EnumActionResult.SUCCESS
+                    }
                 }
             }
         } else if (block.block is IPulsarUsable) {
