@@ -69,8 +69,7 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
                 }
             } else if (block.block is IPulsarUsable) {
                 return (block.block as IPulsarUsable).onPulsarUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)
-            } else
-                playerIn.sendSpamlessMessage(TextComponentTranslation("$MODID.misc.notonnetwork", pick.textComponent).setStyle(Style().setColor(TextFormatting.RED)), CHANNEL_ID)
+            }
         }
         return EnumActionResult.SUCCESS
     }

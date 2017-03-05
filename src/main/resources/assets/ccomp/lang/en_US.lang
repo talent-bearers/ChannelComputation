@@ -37,12 +37,11 @@ ccomp.command.request.success.ghost=Is ghost: %s
 ccomp.command.request.success.size=Size: %s
 ccomp.command.request.success.data=Data: %s
 
-ccomp.command.channel.usage=/channel-packet <x> <y> <z> <strength> <type> <id from> <id to>
+ccomp.command.channel.usage=/channel-packet <x> <y> <z> <strength> <type> <id from> [ids to repeat to]
 ccomp.command.channel.success.size=Response size: %s
 ccomp.command.channel.success.data=Response data: %s
 
 ccomp.misc.cableselected=This %s has been selected as the target cable.
-ccomp.misc.notonnetwork=This %s isn't a part of a data network.
 ccomp.misc.notanode=This %s isn't a data node.
 ccomp.misc.notconnected=This %s isn't connected to the cable you selected. This could be because they're too far apart, or you missed a connection.
 ccomp.misc.foundconnection=This %s is connected, and from the cable you selected, it has ID %d.

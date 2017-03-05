@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.WorldServer
 import talent.bearers.ccomp.MODID
+import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.pathing.PathCrawler
 
@@ -19,7 +20,7 @@ object CommandPortForward : CommandBase() {
     val FORWARDING_TYPES = mutableListOf("signal")
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<out String>) {
-        if (args.size < 7) throw WrongUsageException(getCommandUsage())
+        if (args.size < 6) throw WrongUsageException(getCommandUsage())
 
         val world = sender.entityWorld as? WorldServer ?: throw CommandException("this ought to be impossible")
 
@@ -36,11 +37,6 @@ object CommandPortForward : CommandBase() {
             throw CommandException("$MODID.command.request.bigid")
         val nodeFrom = nodes[idFrom]
 
-        val idTo = parseInt(args[6], 0)
-        if (nodes.size <= idTo)
-            throw CommandException("$MODID.command.request.bigid")
-        val nodeTo = nodes[idTo]
-
         val state = sender.entityWorld.getBlockState(nodeFrom)
         val block = state.block as IDataNode
         val packet = block.requestPullPacket(type, strength, nodeFrom, world)
@@ -53,17 +49,30 @@ object CommandPortForward : CommandBase() {
             notifyCommandListener(sender, this, "$MODID.command.request.success.size", packet.size)
             notifyCommandListener(sender, this, "$MODID.command.request.success.data", packet.data)
 
-            if (!packet.isGhost || packet.type in FORWARDING_TYPES) {
-                val toState = sender.entityWorld.getBlockState(nodeTo)
-                val toBlock = toState.block as IDataNode
-                val result = toBlock.pushPacket(packet, nodeTo, world)
+            repeatPacket(sender, world, packet, nodes, args.sliceArray(6..args.size))
+        }
+    }
 
-                if (result == null)
-                    notifyCommandListener(sender, this, "$MODID.command.request.nopacket")
-                else {
-                    notifyCommandListener(sender, this, "$MODID.command.channel.success.size", result.size)
-                    notifyCommandListener(sender, this, "$MODID.command.channel.success.data", result.data)
-                }
+    fun repeatPacket(sender: ICommandSender, world: WorldServer, packet: IPacket, nodes: List<BlockPos>, remaining: Array<out String>) {
+        if (remaining.isEmpty()) return
+
+        val idTo = parseInt(remaining[0], 0)
+        if (nodes.size <= idTo)
+            throw CommandException("$MODID.command.request.bigid")
+        val nodeTo = nodes[idTo]
+
+        if (!packet.isGhost || packet.type in FORWARDING_TYPES) {
+            val toState = sender.entityWorld.getBlockState(nodeTo)
+            val toBlock = toState.block as IDataNode
+            val result = toBlock.pushPacket(packet, nodeTo, world)
+
+            if (result == null)
+                notifyCommandListener(sender, this, "$MODID.command.request.nopacket")
+            else {
+                notifyCommandListener(sender, this, "$MODID.command.channel.success.size", result.size)
+                notifyCommandListener(sender, this, "$MODID.command.channel.success.data", result.data)
+
+                repeatPacket(sender, world, result, nodes, remaining.sliceArray(1..remaining.size))
             }
         }
     }
