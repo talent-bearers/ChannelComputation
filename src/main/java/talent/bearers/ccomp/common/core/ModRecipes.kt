@@ -48,55 +48,56 @@ object ModRecipes {
         furnaceRecipe(ItemStack(ModItems.METAL, 1, 0), ItemStack(ModItems.METAL, 1, 1), 0.1f)
 
         shapedRecipe(ModBlocks.SIGNAL_NODE,
-                " C ",
-                "D d",
+                "Dd",
+                "RC",
                 'C', "ingotComputationAlloy",
                 'D', "diskSignalIn",
-                'd', "diskSignalOut")
+                'd', "diskSignalOut",
+                'R', "diskSignal")
 
         shapedRecipe(ModBlocks.ENERGY_NODE,
-                " C ",
-                "DId",
+                "Dd",
+                "IC",
                 'C', "ingotComputationAlloy",
                 'D', "diskEnergyIn",
                 'd', "diskEnergyOut",
                 'I', "diskSignalIn")
 
         shapedRecipe(ModBlocks.FLUID_NODE,
-                " C ",
-                "DId",
+                "Dd",
+                "IC",
                 'C', "ingotComputationAlloy",
                 'D', "diskFluidIn",
                 'd', "diskFluidOut",
                 'I', "diskSignalIn")
 
         shapedRecipe(ModBlocks.ITEM_NODE,
-                " C ",
-                "DId",
+                "Dd",
+                "IC",
                 'C', "ingotComputationAlloy",
                 'D', "diskItemIn",
                 'd', "diskItemOut",
                 'I', "diskSignalIn")
 
         shapedRecipe(ModBlocks.ENERGY_LANCER,
-                " I ",
-                "DCS",
+                "DI",
+                "SC",
                 'I', "ingotIron",
                 'C', "ingotComputationAlloy",
                 'D', "diskEnergyIn",
                 'S', "diskSignalIn")
 
         shapedRecipe(ModBlocks.FLUID_LANCER,
-                " I ",
-                "DCS",
+                "DI",
+                "SC",
                 'I', "ingotIron",
                 'C', "ingotComputationAlloy",
                 'D', "diskFluidIn",
                 'S', "diskSignalIn")
 
         shapedRecipe(ModBlocks.ITEM_LANCER,
-                " I ",
-                "DCS",
+                "DI",
+                "SC",
                 'I', "ingotIron",
                 'C', "ingotComputationAlloy",
                 'D', "diskItemIn",

@@ -3,6 +3,7 @@ package talent.bearers.ccomp.common.core
 import com.teamwizardry.librarianlib.common.base.ModCreativeTab
 import net.minecraft.item.ItemStack
 import talent.bearers.ccomp.common.blocks.ModBlocks
+import talent.bearers.ccomp.common.items.ModItems
 
 /**
  * @author WireSegal
@@ -11,7 +12,7 @@ import talent.bearers.ccomp.common.blocks.ModBlocks
 object ModTab : ModCreativeTab() {
 
     override val iconStack by lazy {
-        ItemStack(ModBlocks.SIGNAL_NODE)
+        ItemStack(ModItems.PULSAR)
     }
 
     init {

@@ -26,6 +26,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.BlockBaseNode.Companion.FACING
 
 /**
  * @author WireSegal
@@ -33,7 +34,6 @@ import talent.bearers.ccomp.api.packet.IPacket
  */
 abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
-        val FACING: PropertyDirection = PropertyDirection.create("facing")
         val UP_AABB    = AxisAlignedBB(5 / 16.0, 10 / 16.0, 5 / 16.0, 11 / 16.0,      1.0, 11 / 16.0)
         val DOWN_AABB  = AxisAlignedBB(5 / 16.0,       0.0, 5 / 16.0, 11 / 16.0, 6 / 16.0, 11 / 16.0)
 
@@ -90,7 +90,7 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
 
         ModelHandler.generateBlockJson(this, {
                 JsonGenerationUtils.generateBlockStates(this, mapper) {
-                    val facing = "facing=(\\w+)".toRegex().find(it)?.groupValues?.get(1)?.toUpperCase()
+                    val facing = "${FACING.name}=(\\w+)".toRegex().find(it)?.groupValues?.get(1)?.toUpperCase()
                     val dir = byName(facing)
                     val x = if (dir == DOWN) 180 else if (dir == SOUTH) 270 else if (dir == UP) 0 else 90
                     val y = if (dir == EAST) 90 else if (dir == WEST) 270 else 0

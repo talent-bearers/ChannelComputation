@@ -33,7 +33,7 @@ import talent.bearers.ccomp.api.packet.IPacket
  */
 abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
-        val FACING: PropertyDirection = PropertyDirection.create("facing")
+        val FACING: PropertyDirection = PropertyDirection.create("attachment")
         val UP_AABB    = AxisAlignedBB(6 / 16.0, 13 / 16.0, 6 / 16.0, 10 / 16.0,      1.0, 10 / 16.0)
         val DOWN_AABB  = AxisAlignedBB(6 / 16.0,       0.0, 6 / 16.0, 10 / 16.0, 3 / 16.0, 10 / 16.0)
 
@@ -92,7 +92,7 @@ abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDat
 
         ModelHandler.generateBlockJson(this, {
                 JsonGenerationUtils.generateBlockStates(this, mapper) {
-                    val facing = "facing=(\\w+)".toRegex().find(it)?.groupValues?.get(1)?.toUpperCase()
+                    val facing = "${FACING.name}=(\\w+)".toRegex().find(it)?.groupValues?.get(1)?.toUpperCase()
                     val dir = byName(facing)
                     val x = if (dir == DOWN) 180 else if (dir == SOUTH) 270 else if (dir == UP) 0 else 90
                     val y = if (dir == EAST) 90 else if (dir == WEST) 270 else 0
