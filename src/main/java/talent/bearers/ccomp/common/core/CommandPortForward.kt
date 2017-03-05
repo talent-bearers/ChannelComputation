@@ -50,7 +50,7 @@ object CommandPortForward : CommandBase() {
             notifyCommandListener(sender, this, "$MODID.command.request.success.size", packet.size)
             notifyCommandListener(sender, this, "$MODID.command.request.success.data", packet.data)
 
-            if (!packet.isGhost && packet.type !in FORWARDING_TYPES) {
+            if (!packet.isGhost || packet.type in FORWARDING_TYPES) {
                 val toState = sender.entityWorld.getBlockState(nodeTo)
                 val toBlock = toState.block as IDataNode
                 val result = toBlock.pushPacket(packet, nodeTo, sender.entityWorld)
