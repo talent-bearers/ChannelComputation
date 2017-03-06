@@ -107,23 +107,23 @@ object ModRecipes {
         shapedRecipe(ModBlocks.FLUID_INTERACTION,
                 "IDO",
                 " C ",
-                "MSM",
+                "PSP",
                 'C', "ingotComputationAlloy",
                 'I', "diskFluidIn",
                 'O', "diskFluidOut",
-                'M', "diskFluid",
                 'S', "diskSignalIn",
+                'P', Blocks.PISTON,
                 'D', Blocks.DROPPER)
 
         shapedRecipe(ModBlocks.ITEM_INTERACTION,
                 "IDO",
                 " C ",
-                "MSM",
+                "PSP",
                 'C', "ingotComputationAlloy",
                 'I', "diskItemIn",
                 'O', "diskItemOut",
-                'M', "diskItem",
                 'S', "diskSignalIn",
+                'P', Blocks.PISTON,
                 'D', Blocks.DROPPER)
 
         shapedRecipe(ItemStack(ModBlocks.CABLE, 16),
