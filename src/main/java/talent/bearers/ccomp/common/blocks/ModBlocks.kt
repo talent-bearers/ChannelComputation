@@ -22,4 +22,5 @@ object ModBlocks {
     val ITEM_INTERACTION = BlockItemInteraction()
     val FLUID_INTERACTION = BlockFluidInteraction()
     val METAL_BLOCK: Block = BlockMod("metal_block", Material.IRON).setHardness(5.0F).setResistance(10.0F).apply { OreDictionary.registerOre("blockComputationAlloy", this) }
+    val TANK = BlockFluidColumn()
 }

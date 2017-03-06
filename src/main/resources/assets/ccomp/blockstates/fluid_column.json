@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"normal": {
+			"model": "ccomp:fluid_column"
+		}
+	}
+}

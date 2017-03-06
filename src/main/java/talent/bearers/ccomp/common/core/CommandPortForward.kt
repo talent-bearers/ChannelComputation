@@ -1,9 +1,6 @@
 package talent.bearers.ccomp.common.core
 
-import net.minecraft.command.CommandBase
-import net.minecraft.command.CommandException
-import net.minecraft.command.ICommandSender
-import net.minecraft.command.WrongUsageException
+import net.minecraft.command.*
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.WorldServer
@@ -57,8 +54,12 @@ object CommandPortForward : CommandBase() {
 
     fun repeatPacket(sender: ICommandSender, world: WorldServer, packet: IPacket, nodes: List<BlockPos>, remaining: Array<out String>) {
         if (remaining.isEmpty()) return
-
-        val idTo = parseInt(remaining[0], 0)
+        val idTo = try {
+            parseInt(remaining[0], 0)
+        } catch (e: NumberInvalidException) {
+            if (e.errorObjects[0] == null) return
+            throw e
+        }
         if (nodes.size <= idTo)
             throw CommandException("$MODID.command.request.bigid")
         val nodeTo = nodes[idTo]

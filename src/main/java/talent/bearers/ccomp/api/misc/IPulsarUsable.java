@@ -17,4 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public interface IPulsarUsable {
     @NotNull
     EnumActionResult onPulsarUse(@NotNull ItemStack stack, @NotNull EntityPlayer playerIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ);
+
+    default boolean shouldBreak(@NotNull ItemStack stack, @NotNull EntityPlayer playerIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        return true;
+    }
 }

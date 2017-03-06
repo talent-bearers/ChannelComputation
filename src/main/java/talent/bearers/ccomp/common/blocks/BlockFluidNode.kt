@@ -31,7 +31,9 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
         var toTake = if (strength == -1) Int.MAX_VALUE else strength
         for (i in capability.tankProperties) {
             val stack = i.contents ?: continue
-            val taken = capability.drain(stack, !ghost)
+            val copied = stack.copy()
+            copied.amount = toTake
+            val taken = capability.drain(copied, !ghost)
             if (taken != null && taken.amount != 0) {
                 fluids.add(taken)
                 toTake -= taken.amount
