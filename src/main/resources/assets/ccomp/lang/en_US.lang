@@ -15,8 +15,8 @@ item.ccomp:energy_output_disk.name=Provider Disk - Energy
 item.ccomp:fluid_output_disk.name=Provider Disk - Fluids
 item.ccomp:item_output_disk.name=Provider Disk - Items
 
-item.ccomp:metal.name=Computation Alloy
-item.ccomp:metal_blend.name=Computation Alloy Blend
+item.ccomp:metal.name=Semiconductive Steel
+item.ccomp:metal_blend.name=Semiconductive Steel Blend
 
 itemGroup.ccomp=Channel Comptuation
 
@@ -40,7 +40,7 @@ tile.ccomp:item_lancer.name=Lancing Data Node - Items
 tile.ccomp:item_lancer.desc=Can read (but not write) the item values of the first item storage block within 7 blocks.
 
 tile.ccomp:fluid_interaction.name=Interactive Data Node - Fluids
-tile.ccomp:fluid_interaction.desc=Catn read and write fluids from a fluid block in front of it. It can only read/write in 1000 strength intervals.
+tile.ccomp:fluid_interaction.desc=Can read and write fluids from a fluid block in front of it. It can only read/write in 1000 strength intervals.
 tile.ccomp:item_interaction.name=Interactive Data Node - Items
 tile.ccomp:item_interaction.desc=Can read and write block items from the block in front of it. It can only write in 1 strength intervals.
 
