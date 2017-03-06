@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "ccomp:blocks/metal_block"
+	}
+}

@@ -139,6 +139,13 @@ object ModRecipes {
                 "C  ",
                 'D', "diskBasic",
                 'C', "ingotComputationAlloy")
+
+        shapedRecipe(ModBlocks.METAL_BLOCK,
+                "III", "III", "III",
+                'I', "ingotComputationAlloy")
+
+        shapedRecipe(ItemStack(ModItems.METAL, 9),
+                "B", 'B', "blockComputationAlloy")
     }
 
     fun furnaceRecipe(stack: Any, input: Any, xp: Float) {

@@ -17,8 +17,9 @@ item.ccomp:item_output_disk.name=Provider Disk - Items
 
 item.ccomp:metal.name=Semiconductive Steel
 item.ccomp:metal_blend.name=Semiconductive Steel Blend
+tile.ccomp:metal_block.name=Block of Semiconductive Steel
 
-itemGroup.ccomp=Channel Comptuation
+itemGroup.ccomp=Channel Computation
 
 tile.ccomp:cable.name=Data Connection Cable
 tile.ccomp:cable.desc=Connects data nodes and requesting blocks.
