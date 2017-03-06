@@ -48,36 +48,36 @@ object ModRecipes {
         furnaceRecipe(ItemStack(ModItems.METAL, 1, 0), ItemStack(ModItems.METAL, 1, 1), 0.1f)
 
         shapedRecipe(ModBlocks.SIGNAL_NODE,
-                "Dd",
-                "RC",
+                "IO",
+                "SC",
                 'C', "ingotComputationAlloy",
-                'D', "diskSignalIn",
-                'd', "diskSignalOut",
-                'R', "diskSignal")
+                'I', "diskSignalIn",
+                'O', "diskSignalOut",
+                'S', "diskSignal")
 
         shapedRecipe(ModBlocks.ENERGY_NODE,
-                "Dd",
-                "IC",
+                "IO",
+                "SC",
                 'C', "ingotComputationAlloy",
-                'D', "diskEnergyIn",
-                'd', "diskEnergyOut",
-                'I', "diskSignalIn")
+                'I', "diskEnergyIn",
+                'O', "diskEnergyOut",
+                'S', "diskSignalIn")
 
         shapedRecipe(ModBlocks.FLUID_NODE,
-                "Dd",
-                "IC",
+                "IO",
+                "SC",
                 'C', "ingotComputationAlloy",
-                'D', "diskFluidIn",
-                'd', "diskFluidOut",
-                'I', "diskSignalIn")
+                'I', "diskFluidIn",
+                'O', "diskFluidOut",
+                'S', "diskSignalIn")
 
         shapedRecipe(ModBlocks.ITEM_NODE,
-                "Dd",
-                "IC",
+                "IO",
+                "SC",
                 'C', "ingotComputationAlloy",
-                'D', "diskItemIn",
-                'd', "diskItemOut",
-                'I', "diskSignalIn")
+                'I', "diskItemIn",
+                'O', "diskItemOut",
+                'S', "diskSignalIn")
 
         shapedRecipe(ModBlocks.ENERGY_LANCER,
                 "DI",
@@ -105,26 +105,26 @@ object ModRecipes {
 
 
         shapedRecipe(ModBlocks.FLUID_INTERACTION,
-                "DFd",
+                "IDO",
                 " C ",
-                "GSG",
+                "MSM",
                 'C', "ingotComputationAlloy",
-                'D', "diskFluidIn",
-                'd', "diskFluidOut",
-                'G', "diskFluid",
+                'I', "diskFluidIn",
+                'O', "diskFluidOut",
+                'M', "diskFluid",
                 'S', "diskSignalIn",
-                'F', Blocks.DROPPER)
+                'D', Blocks.DROPPER)
 
         shapedRecipe(ModBlocks.ITEM_INTERACTION,
-                "DFd",
+                "IDO",
                 " C ",
-                "GSG",
+                "MSM",
                 'C', "ingotComputationAlloy",
-                'D', "diskItemIn",
-                'd', "diskItemOut",
-                'G', "diskItem",
+                'I', "diskItemIn",
+                'O', "diskItemOut",
+                'M', "diskItem",
                 'S', "diskSignalIn",
-                'F', Blocks.DROPPER)
+                'D', Blocks.DROPPER)
 
         shapedRecipe(ItemStack(ModBlocks.CABLE, 16),
                 " D ",

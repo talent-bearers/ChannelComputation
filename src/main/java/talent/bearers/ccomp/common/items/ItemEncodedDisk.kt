@@ -73,5 +73,11 @@ class ItemEncodedDisk : ItemMod("disk", *VARIANTS), IItemColorProvider {
     }
 
     override val itemColorFunction: ((ItemStack, Int) -> Int)?
-        get() = { stack, tintIndex -> if (tintIndex == 2) Color(getDiskType(stack).color).pulseColor().rgb else -1 }
+        get() = { stack, tintIndex -> if (tintIndex == 2) Color(getDiskType(stack).color).aLittleDarker().pulseColor().rgb else -1 }
+
+    fun Color.aLittleDarker(amount: Int = 12)
+            = Color(Math.max(red - amount, 0),
+                Math.max(green - amount, 0),
+                Math.max(blue - amount, 0),
+                alpha)
 }
