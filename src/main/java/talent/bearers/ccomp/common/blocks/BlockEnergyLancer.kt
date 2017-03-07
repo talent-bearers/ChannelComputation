@@ -25,9 +25,10 @@ class BlockEnergyLancer : BlockBaseLancer("energy_lancer") {
         val target = getTarget(pos, world) { pos, tile, facing ->
             tile?.hasCapability(CapabilityEnergy.ENERGY, facing) ?: false
         }
+        val amount = if (strength == -1) Int.MAX_VALUE else strength
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        return EnergyPacket(capability.extractEnergy(strength, true), ghost = true)
+        return EnergyPacket(capability.extractEnergy(amount, true), ghost = true)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {

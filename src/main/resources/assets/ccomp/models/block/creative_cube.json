@@ -1,0 +1,7 @@
+{
+    "parent": "ccomp:block/energy_cube",
+    "textures": {
+        "particle": "ccomp:blocks/creative_cube",
+        "texture": "ccomp:blocks/creative_cube"
+    }
+}

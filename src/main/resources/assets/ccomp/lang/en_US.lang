@@ -20,6 +20,8 @@ item.ccomp:metal_blend.name=Semiconductive Steel Blend
 tile.ccomp:metal_block.name=Block of Semiconductive Steel
 
 tile.ccomp:fluid_column.name=Fluid Storage Column
+tile.ccomp:energy_cube.name=Energy Storage Cube
+tile.ccomp:creative_cube.name=Infinite Energy Storage Cube
 
 itemGroup.ccomp=Channel Computation
 

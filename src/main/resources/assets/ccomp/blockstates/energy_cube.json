@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"creative=false": {
+			"model": "ccomp:energy_cube"
+		},
+		"creative=true": {
+			"model": "ccomp:creative_cube"
+		}
+	}
+}

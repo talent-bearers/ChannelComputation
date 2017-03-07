@@ -23,8 +23,9 @@ class BlockEnergyNode : BlockBaseNode("energy_node") {
     fun getPacket(strength: Int, pos: BlockPos, world: IBlockAccess, ghost: Boolean): IPacket? {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
+        val amount = if (strength == -1) Int.MAX_VALUE else strength
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        return EnergyPacket(capability.extractEnergy(strength, ghost), ghost = ghost)
+        return EnergyPacket(capability.extractEnergy(amount, ghost), ghost = ghost)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
