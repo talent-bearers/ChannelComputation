@@ -66,9 +66,9 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
 
     override fun onBlockActivated(worldIn: World, pos: BlockPos?, state: IBlockState?, playerIn: EntityPlayer?, hand: EnumHand?, heldItem: ItemStack?, side: EnumFacing?, hitX: Float, hitY: Float, hitZ: Float): Boolean {
         val te = worldIn.getTileEntity(pos)
-        if(te == null || !te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) return false
+        if(te == null || !te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) return false
 
-        val fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+        val fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)
         return FluidUtil.interactWithFluidHandler(heldItem, fluidHandler, playerIn)
     }
 
@@ -100,13 +100,15 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
         @SaveMethodSetter("tank")
         private fun deserTank(nbt: NBTTagCompound) = tank.readFromNBT(nbt)
 
+        fun shouldProvide(facing: EnumFacing?) = facing == null || facing == EnumFacing.UP || facing == EnumFacing.DOWN
+
         override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean {
-            return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing)
+            return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && shouldProvide(facing)) || super.hasCapability(capability, facing)
         }
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : Any> getCapability(capability: Capability<T>, facing: EnumFacing?): T? {
-            if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && shouldProvide(facing))
                 return tank as T
             return super.getCapability(capability, facing)
         }
