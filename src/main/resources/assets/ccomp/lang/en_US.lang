@@ -19,6 +19,8 @@ item.ccomp:metal.name=Semiconductive Steel
 item.ccomp:metal_blend.name=Semiconductive Steel Blend
 tile.ccomp:metal_block.name=Block of Semiconductive Steel
 
+tile.ccomp:fluid_column.name=Fluid Storage Column
+
 itemGroup.ccomp=Channel Computation
 
 tile.ccomp:cable.name=Data Connection Cable

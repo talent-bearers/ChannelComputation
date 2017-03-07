@@ -140,6 +140,16 @@ object ModRecipes {
                 'D', "diskBasic",
                 'C', "ingotComputationAlloy")
 
+        shapedRecipe(ModBlocks.TANK,
+                "CIC",
+                "GSG",
+                "COC",
+                'C', "ingotComputationAlloy",
+                'I', "diskFluidIn",
+                'G', "blockGlass",
+                'S', "diskFluid",
+                'O', "diskFluidOut")
+
         shapedRecipe(ModBlocks.METAL_BLOCK,
                 "III", "III", "III",
                 'I', "ingotComputationAlloy")

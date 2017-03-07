@@ -41,13 +41,13 @@ import javax.annotation.Nonnull
  * @author WireSegal
  * Created at 4:25 PM on 3/6/17.
  */
-class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPulsarUsable {
+class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPulsarUsable { // todo make data node
     init {
         setHardness(1f)
     }
 
     companion object {
-        val AABB = AxisAlignedBB(1 / 16.0, 0.0, 1 / 16.0, 15 / 16.0, 1.0, 15 / 16.0)
+        val AABB = AxisAlignedBB(2 / 16.0, 0.0, 2 / 16.0, 14 / 16.0, 1.0, 14 / 16.0)
     }
 
     override fun getBoundingBox(state: IBlockState?, source: IBlockAccess?, pos: BlockPos?) = AABB
