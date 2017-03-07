@@ -15,9 +15,9 @@ import talent.bearers.ccomp.api.packet.IPacket;
 public interface IDataNode extends ICableConnectible {
     /**
      * What facing the data node is attached to. This is for path crawler connections.
-     * Used for connection tests in implementations of {@link ICrawlableCable#connectedOnSide(EnumFacing, BlockPos, IBlockAccess)}.
+     * This is provided mostly for convenience: This can be ignored if isSideAvailable is overridden.
      */
-    @NotNull
+    @Nullable
     EnumFacing connectionPoint(@NotNull BlockPos pos, @NotNull IBlockAccess world);
 
     /**

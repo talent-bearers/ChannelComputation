@@ -1,13 +1,16 @@
 package talent.bearers.ccomp.common.blocks
 
+import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.block.BlockModContainer
 import com.teamwizardry.librarianlib.common.base.block.TileMod
+import com.teamwizardry.librarianlib.common.util.ItemNBTHelper
 import com.teamwizardry.librarianlib.common.util.autoregister.TileRegister
 import com.teamwizardry.librarianlib.common.util.saving.SaveMethodGetter
 import com.teamwizardry.librarianlib.common.util.saving.SaveMethodSetter
 import com.teamwizardry.librarianlib.common.util.sendSpamlessMessage
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -20,17 +23,24 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.fluids.Fluid
-import net.minecraftforge.fluids.FluidTank
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import talent.bearers.ccomp.api.misc.IPulsarUsable
 import talent.bearers.ccomp.common.items.ItemPulsar
 import net.minecraft.item.ItemBlock
 import net.minecraft.util.BlockRenderLayer
-import net.minecraftforge.fluids.FluidUtil
+import net.minecraft.util.math.RayTraceResult
+import net.minecraft.world.WorldServer
+import net.minecraftforge.energy.EnergyStorage
+import net.minecraftforge.fluids.*
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler.side
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
+import talent.bearers.ccomp.MODID
+import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.api.pathing.IDataNode
+import talent.bearers.ccomp.common.core.FluidStack
+import talent.bearers.ccomp.common.packets.FluidPacket
+import talent.bearers.ccomp.common.packets.SignalPacket
 import javax.annotation.Nonnull
 
 
@@ -41,9 +51,62 @@ import javax.annotation.Nonnull
  * @author WireSegal
  * Created at 4:25 PM on 3/6/17.
  */
-class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPulsarUsable { // todo make data node
+class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPulsarUsable, IDataNode {
     init {
         setHardness(1f)
+    }
+
+    override fun connectionPoint(pos: BlockPos, world: IBlockAccess) = null
+
+    override fun isSideAvailable(side: EnumFacing, pos: BlockPos, world: IBlockAccess): Boolean {
+        return side.horizontalIndex == -1
+    }
+
+    fun getPacket(strength: Int, pos: BlockPos, world: IBlockAccess, ghost: Boolean): IPacket? {
+        val tile = world.getTileEntity(pos) as? TileFluidColumn ?: return null
+        val capability = tile.tank
+        val fluids = mutableListOf<FluidStack>()
+        var toTake = if (strength == -1) Int.MAX_VALUE else strength
+        val toTakeOrig = toTake
+        for (i in capability.tankProperties) {
+            val stack = i.contents ?: continue
+            val copied = stack.copy()
+            copied.amount = toTake
+            val taken = capability.drain(copied, !ghost)
+            if (taken != null && taken.amount != 0) {
+                fluids.add(taken)
+                toTake -= taken.amount
+            }
+        }
+        if (toTake != toTakeOrig && !ghost) tile.markDirty()
+        return FluidPacket(fluids, ghost)
+    }
+
+    fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
+        val capability = (world.getTileEntity(pos) as? TileFluidColumn)?.tank ?: return null
+        var percent = 0f
+        var tanks = 0
+        for (i in capability.tankProperties) {
+            percent += (i.contents?.amount ?: 0).toFloat() / i.capacity
+            tanks++
+        }
+        percent /= tanks
+        return SignalPacket(percent)
+    }
+
+    override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
+        if (packetType == "fluid") return getPacket(strength, pos, world, true)
+        else if (packetType == "signal") return getTotalStrength(pos, world)
+        return null
+    }
+
+    override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)
+            = if (packetType == "fluid") getPacket(strength, pos, world, false) else null
+
+    override fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer): IPacket? {
+        if (packet.type != "fluid") return packet
+        val capability = (world.getTileEntity(pos) as? TileFluidColumn) ?: return packet
+        return FluidPacket.transfer(packet, capability.tank, capability)
     }
 
     companion object {
@@ -54,14 +117,34 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
 
     override fun createTileEntity(world: World, state: IBlockState) = TileFluidColumn()
 
-    override fun onPulsarUse(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult {
-        if (!worldIn.isRemote) {
-            //todo localize
-            val fluid = (worldIn.getTileEntity(pos) as? TileFluidColumn)?.tank?.fluid
-            if (fluid == null) playerIn.sendSpamlessMessage("Empty", ItemPulsar.CHANNEL_ID)
-            else playerIn.sendSpamlessMessage("${fluid.localizedName}x${fluid.amount}", ItemPulsar.CHANNEL_ID)
+    override fun getHUDOverlay(playerIn: EntityPlayer, worldIn: World, pos: BlockPos, ray: RayTraceResult): String? {
+        val fluid = (worldIn.getTileEntity(pos) as? TileFluidColumn)?.tank?.fluid ?: return TooltipHelper.local("$MODID.hud.nofluid")
+        return TooltipHelper.local("$MODID.hud.fluid", fluid.amount, fluid.localizedName)
+    }
+
+    override fun addInformation(stack: ItemStack, player: EntityPlayer?, tooltip: MutableList<String>, advanced: Boolean) {
+        if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
+            val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
+            TooltipHelper.addToTooltip(tooltip, "$MODID.hud.fluid", fluid.amount, fluid.localizedName)
         }
-        return EnumActionResult.SUCCESS
+    }
+
+    override fun onBlockPlacedBy(worldIn: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack) {
+        if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
+            val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
+            val te = worldIn.getTileEntity(pos)
+            if (te is TileFluidColumn)
+                te.tank.fluid = fluid
+        }
+    }
+
+    override fun customDropImplementation(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean {
+        val drop = ItemStack(this)
+        val tile = worldIn.getTileEntity(pos) as? TileFluidColumn ?: return false
+        val fluid = tile.tank.fluid ?: return false
+        ItemNBTHelper.setCompound(drop, "fluid", fluid.writeToNBT(NBTTagCompound()))
+        spawnAsEntity(worldIn, pos, drop)
+        return true
     }
 
     override fun onBlockActivated(worldIn: World, pos: BlockPos?, state: IBlockState?, playerIn: EntityPlayer?, hand: EnumHand?, heldItem: ItemStack?, side: EnumFacing?, hitX: Float, hitY: Float, hitZ: Float): Boolean {
@@ -69,7 +152,8 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
         if(te == null || !te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) return false
 
         val fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)
-        return FluidUtil.interactWithFluidHandler(heldItem, fluidHandler, playerIn)
+        FluidUtil.interactWithFluidHandler(heldItem, fluidHandler, playerIn)
+        return FluidUtil.getFluidHandler(heldItem) != null
     }
 
     override fun getLightValue(@Nonnull state: IBlockState, world: IBlockAccess, @Nonnull pos: BlockPos): Int {

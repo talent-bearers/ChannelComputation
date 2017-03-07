@@ -23,6 +23,10 @@ tile.ccomp:fluid_column.name=Fluid Storage Column
 tile.ccomp:energy_cube.name=Energy Storage Cube
 tile.ccomp:creative_cube.name=Infinite Energy Storage Cube
 
+ccomp.hud.energy=%s Energy
+ccomp.hud.fluid=%sx %s
+ccomp.hud.nofluid=Empty
+
 itemGroup.ccomp=Channel Computation
 
 tile.ccomp:cable.name=Data Connection Cable

@@ -34,6 +34,7 @@ class BlockItemNode : BlockBaseNode("item_node") {
         val capability = target.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)
         val stacks = mutableListOf<ItemStack>()
         var toTake = if (strength == -1) Int.MAX_VALUE else strength
+        val origToTake = toTake
         for (i in 0 until capability.slots) {
             val taken = capability.extractItem(i, toTake, ghost)
             if (!taken.isEmpty) {
@@ -41,6 +42,7 @@ class BlockItemNode : BlockBaseNode("item_node") {
                 toTake -= taken.count
             }
         }
+        if (origToTake != toTake && !ghost) target.tile.markDirty()
         return ItemPacket(stacks, ghost)
     }
 
@@ -72,6 +74,6 @@ class BlockItemNode : BlockBaseNode("item_node") {
         if (packet.type != "item") return packet
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)) return packet
-        return ItemPacket.transfer(packet, target.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing))
+        return ItemPacket.transfer(packet, target.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing), target.tile)
     }
 }

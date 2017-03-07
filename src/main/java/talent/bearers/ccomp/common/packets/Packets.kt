@@ -63,9 +63,10 @@ class ItemPacket(vararg val items: ItemStack, val ghost: Boolean = false) : IPac
             return ret
         }
 
-        fun transfer(packet: IPacket, items: IItemHandler): IPacket? {
+        fun transfer(packet: IPacket, items: IItemHandler, tileEntity: TileEntity): IPacket? {
             if (packet.isGhost) return null
             val newItems = getItems(packet).mapNotNull { ItemHandlerHelper.insertItem(items, it, false) }
+            tileEntity.markDirty()
             if (newItems.isEmpty()) return null
 
             return ItemPacket(newItems)
@@ -116,7 +117,7 @@ class FluidPacket(vararg val fluids: FluidStack, val ghost: Boolean = false): IP
             return ret
         }
 
-        fun transfer(packet: IPacket, fluids: IFluidHandler): IPacket? {
+        fun transfer(packet: IPacket, fluids: IFluidHandler, tileEntity: TileEntity): IPacket? {
             if (packet.isGhost) return null
             val newFluids = getFluids(packet).mapNotNull {
                 val stack = it.copy()
@@ -125,6 +126,7 @@ class FluidPacket(vararg val fluids: FluidStack, val ghost: Boolean = false): IP
 
                 if (stack.amount <= 0) null else stack
             }
+            tileEntity.markDirty()
             if (newFluids.isEmpty()) return null
 
             return FluidPacket(newFluids)
@@ -156,12 +158,12 @@ class EnergyPacket(val energy: Int, val ghost: Boolean = false): IPacket {
     companion object {
         fun getEnergy(packet: IPacket) = packet.data.getInteger("energy")
 
-        fun transfer(packet: IPacket, energy: IEnergyStorage): IPacket? {
+        fun transfer(packet: IPacket, energy: IEnergyStorage, tileEntity: TileEntity): IPacket? {
             if (packet.isGhost) return null
             val stored = getEnergy(packet)
             val amountTaken = energy.receiveEnergy(stored, false)
+            tileEntity.markDirty()
             if (amountTaken == stored) return null
-
             return EnergyPacket(stored - amountTaken)
         }
     }

@@ -50,7 +50,8 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
                         (block.block is IPulsarUsable &&
                                 (block.block as IPulsarUsable).shouldBreak(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))) ) {
             if (!worldIn.isRemote) {
-                block.block.dropBlockAsItem(worldIn, pos, block, 0)
+                if (!(block.block as IPulsarUsable).customDropImplementation(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))
+                    block.block.dropBlockAsItem(worldIn, pos, block, 0)
                 worldIn.setBlockState(pos, Blocks.AIR.defaultState)
                 worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f)
             }

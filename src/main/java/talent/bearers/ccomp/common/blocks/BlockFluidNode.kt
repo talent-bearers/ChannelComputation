@@ -29,6 +29,7 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
         val capability = target.tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)
         val fluids = mutableListOf<FluidStack>()
         var toTake = if (strength == -1) Int.MAX_VALUE else strength
+        val origToTake = toTake
         for (i in capability.tankProperties) {
             val stack = i.contents ?: continue
             val copied = stack.copy()
@@ -39,6 +40,7 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
                 toTake -= taken.amount
             }
         }
+        if (toTake != origToTake && !ghost) target.tile.markDirty()
         return FluidPacket(fluids, ghost)
     }
 
@@ -64,6 +66,6 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
         if (packet.type != "fluid") return packet
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)) return packet
-        return FluidPacket.transfer(packet, target.tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing))
+        return FluidPacket.transfer(packet, target.tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing), target.tile)
     }
 }
