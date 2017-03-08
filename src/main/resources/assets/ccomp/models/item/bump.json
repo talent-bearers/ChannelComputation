@@ -1,0 +1,21 @@
+{
+	"__comment": "Designed by Wire Segal with Cubik Studio - https://cubik.studio",
+	"parent": "block/block",
+	"textures": {
+		"texture": "ccomp:items/placeholder"
+	},
+	"elements": [
+		{
+			"__comment": "Cube1",
+			"from": [ 7, 0, 7 ],
+			"to": [ 9, 1, 9 ],
+			"faces": {
+				"up": { "uv": [ 7, 7, 9, 9 ], "texture": "#texture" },
+				"north": { "uv": [ 7, 6, 9, 7 ], "texture": "#texture" },
+				"south": { "uv": [ 7, 9, 9, 10 ], "texture": "#texture" },
+				"west": { "uv": [ 9, 7, 10, 9 ], "texture": "#texture", "rotation": 90 },
+				"east": { "uv": [ 6, 7, 7, 9 ], "texture": "#texture", "rotation": 90 }
+			}
+		}
+	]
+}

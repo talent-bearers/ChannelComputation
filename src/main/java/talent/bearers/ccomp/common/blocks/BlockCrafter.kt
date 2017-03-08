@@ -2,6 +2,7 @@ package talent.bearers.ccomp.common.blocks
 
 import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.block.TileMod
+import com.teamwizardry.librarianlib.common.util.ItemNBTHelper
 import com.teamwizardry.librarianlib.common.util.autoregister.TileRegister
 import com.teamwizardry.librarianlib.common.util.saving.SaveMethodGetter
 import com.teamwizardry.librarianlib.common.util.saving.SaveMethodSetter
@@ -19,7 +20,9 @@ import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
+import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.InventoryCrafting
+import net.minecraft.inventory.InventoryHelper.spawnItemStack
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.CraftingManager
 import net.minecraft.nbt.NBTTagCompound
@@ -78,13 +81,18 @@ class BlockCrafter : ContainerBlockCC("crafter", Material.IRON), IDataNode, IPul
                 val xp = xc + j * 18
                 val yp = yc + i * 18
 
-                Gui.drawRect(xp, yp, xp + 16, yp + 16, if (/*enabled*/ true) 0x44FFFFFF else 0x44FF0000)
-
                 val item = tile.handler.getStackInSlot(index)
-                RenderHelper.enableGUIStandardItemLighting()
-                GlStateManager.enableRescaleNormal()
-                Minecraft.getMinecraft().renderItem.renderItemAndEffectIntoGUI(item, xp, yp)
-                RenderHelper.disableStandardItemLighting()
+
+                val enabled = item?.item != ModItems.PLACEHOLDER
+
+                Gui.drawRect(xp, yp, xp + 16, yp + 16, if (enabled) 0x44FFFFFF else 0x44FF0000)
+
+                if (enabled) {
+                    RenderHelper.enableGUIStandardItemLighting()
+                    GlStateManager.enableRescaleNormal()
+                    Minecraft.getMinecraft().renderItem.renderItemAndEffectIntoGUI(item, xp, yp)
+                    RenderHelper.disableStandardItemLighting()
+                }
             }
             return TooltipHelper.local(if ((0..tile.output.slots).any { tile.output.getStackInSlot(it) != null })
                         "$MODID.hud.output" else "$MODID.hud.nooutput")
@@ -109,6 +117,17 @@ class BlockCrafter : ContainerBlockCC("crafter", Material.IRON), IDataNode, IPul
 
     override fun onBlockPlaced(worldIn: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase): IBlockState
             = defaultState.withProperty(BlockBaseNode.FACING, facing.opposite)
+
+    override fun breakBlock(worldIn: World, pos: BlockPos, state: IBlockState) {
+        val tile = worldIn.getTileEntity(pos)
+        if (tile is TileCrafter)
+            (0..tile.handler.slots - 1)
+                    .map { tile.handler.getStackInSlot(it) }
+                    .filterNot { it.isEmpty }
+                    .forEach { spawnItemStack(worldIn, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), it) }
+
+        super.breakBlock(worldIn, pos, state)
+    }
 
     @TileRegister("crafter")
     class TileCrafter : TileMod() {
@@ -163,16 +182,21 @@ class BlockCrafter : ContainerBlockCC("crafter", Material.IRON), IDataNode, IPul
             no = true
             val empty = (0 until 9).any { getStackInSlot(it).isEmpty }
             if (!empty) {
-                val fakeInv = FakeCraftingInventory(this, false)
+                val fakeInv = FakeCraftingInventory(this)
                 val recipe = CraftingManager.getInstance().recipeList
                         .filter { it.matches(fakeInv, tile.world) }.firstOrNull()
                 if (recipe != null) {
                     val result = recipe.getCraftingResult(fakeInv)
                     if (result != null) {
-                        val remainInv = FakeCraftingInventory(this, true)
-                        for (i in 0 until 9) setStackInSlot(i, EMPTY)
+                        for (i in 0 until 9) {
+                            val item = getStackInSlot(i)
+                            if (item == null || item.isEmpty) continue
+                            if (item.item == ModItems.PLACEHOLDER)
+                                continue
+                            setStackInSlot(i, EMPTY)
+                        }
 
-                        val remaining = recipe.getRemainingItems(remainInv)
+                        val remaining = recipe.getRemainingItems(fakeInv)
 
                         openThyDoorsToMe = true
                         remaining
@@ -196,13 +220,13 @@ class BlockCrafter : ContainerBlockCC("crafter", Material.IRON), IDataNode, IPul
         override fun canInteractWith(playerIn: EntityPlayer?) = true
     }
 
-    private class FakeCraftingInventory(handler: IItemHandler, withPlaceholder: Boolean) : InventoryCrafting(FakeContainer, 3, 3) {
+    private class FakeCraftingInventory(handler: IItemHandler) : InventoryCrafting(FakeContainer, 3, 3) {
         init {
             for (i in 0 until 9) {
                 val stack = handler.getStackInSlot(i)
                 if (stack.isEmpty)
                     continue
-                if (withPlaceholder || stack.item != ModItems.PLACEHOLDER)
+                if (stack.item != ModItems.PLACEHOLDER)
                     setInventorySlotContents(i, stack.copy())
             }
         }

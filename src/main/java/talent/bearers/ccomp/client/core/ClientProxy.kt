@@ -4,6 +4,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+import talent.bearers.ccomp.common.blocks.BlockCrafter
 import talent.bearers.ccomp.common.blocks.BlockFluidColumn
 import talent.bearers.ccomp.common.core.CommonProxy
 
@@ -20,6 +21,7 @@ class ClientProxy : CommonProxy() {
     override fun init(e: FMLInitializationEvent) {
         super.init(e)
         ClientRegistry.bindTileEntitySpecialRenderer(BlockFluidColumn.TileFluidColumn::class.java, ColumnRenderer)
+        ClientRegistry.bindTileEntitySpecialRenderer(BlockCrafter.TileCrafter::class.java, BumpRenderer)
     }
 
     override fun post(e: FMLPostInitializationEvent) {
