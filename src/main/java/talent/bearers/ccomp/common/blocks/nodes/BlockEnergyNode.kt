@@ -1,11 +1,13 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraft.world.WorldServer
 import net.minecraftforge.energy.CapabilityEnergy
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode
 import talent.bearers.ccomp.common.packets.EnergyPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
 
@@ -23,18 +25,15 @@ class BlockEnergyNode : BlockBaseNode("energy_node") {
     fun getPacket(strength: Int, pos: BlockPos, world: IBlockAccess, ghost: Boolean): IPacket? {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
-        val amount = if (strength == -1) Int.MAX_VALUE else strength
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        val amountTaken = capability.extractEnergy(amount, ghost)
-        if (amountTaken != 0 && !ghost) target.tile.markDirty()
-        return EnergyPacket(amountTaken, ghost)
+        return EnergyPacket.fromEnergyStorage(strength, capability, ghost, target.tile)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        return SignalPacket(capability.energyStored.toFloat() / capability.maxEnergyStored)
+        return SignalPacket.fromEnergyStorage(capability)
     }
 
     override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)

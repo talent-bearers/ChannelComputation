@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.base
 
 import com.teamwizardry.librarianlib.client.core.JsonGenerationUtils
 import com.teamwizardry.librarianlib.client.core.ModelHandler
@@ -26,22 +26,23 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.core.BlockCC
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode.Companion.FACING
 
 /**
  * @author WireSegal
  * Created at 11:00 AM on 3/2/17.
  */
-abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
+abstract class BlockBaseInteraction(name: String) : BlockCC(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
-        val FACING: PropertyDirection = PropertyDirection.create("attachment")
-        val UP_AABB    = AxisAlignedBB(6 / 16.0, 13 / 16.0, 6 / 16.0, 10 / 16.0,      1.0, 10 / 16.0)
-        val DOWN_AABB  = AxisAlignedBB(6 / 16.0,       0.0, 6 / 16.0, 10 / 16.0, 3 / 16.0, 10 / 16.0)
+        val UP_AABB    = AxisAlignedBB(5 / 16.0, 10 / 16.0, 5 / 16.0, 11 / 16.0,      1.0, 11 / 16.0)
+        val DOWN_AABB  = AxisAlignedBB(5 / 16.0,       0.0, 5 / 16.0, 11 / 16.0, 6 / 16.0, 11 / 16.0)
 
-        val SOUTH_AABB = AxisAlignedBB(6 / 16.0, 6 / 16.0, 13 / 16.0, 10 / 16.0, 10 / 16.0,      1.0)
-        val NORTH_AABB = AxisAlignedBB(6 / 16.0, 6 / 16.0,       0.0, 10 / 16.0, 10 / 16.0, 3 / 16.0)
+        val SOUTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0, 10 / 16.0, 11 / 16.0, 11 / 16.0,      1.0)
+        val NORTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0,       0.0, 11 / 16.0, 11 / 16.0, 6 / 16.0)
 
-        val EAST_AABB  = AxisAlignedBB(13 / 16.0, 6 / 16.0, 6 / 16.0,      1.0, 10 / 16.0, 10 / 16.0)
-        val WEST_AABB  = AxisAlignedBB(      0.0, 6 / 16.0, 6 / 16.0, 3 / 16.0, 10 / 16.0, 10 / 16.0)
+        val EAST_AABB  = AxisAlignedBB(10 / 16.0, 5 / 16.0, 5 / 16.0,      1.0, 11 / 16.0, 11 / 16.0)
+        val WEST_AABB  = AxisAlignedBB(      0.0, 5 / 16.0, 5 / 16.0, 6 / 16.0, 11 / 16.0, 11 / 16.0)
 
         val AABBS = mapOf(
                 UP to UP_AABB,
@@ -53,15 +54,13 @@ abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDat
         )
 
 
-        fun getTarget(pos: BlockPos, worldIn: IBlockAccess): NodeTarget {
+        fun getTarget(pos: BlockPos, worldIn: IBlockAccess): BlockBaseNode.NodeTarget {
             val thisState = worldIn.getBlockState(pos)
             val thisFacing = thisState.getValue(FACING).opposite
             val shift = pos.offset(thisFacing)
-            return NodeTarget(shift, thisFacing, worldIn.getBlockState(shift), worldIn.getTileEntity(shift))
+            return BlockBaseNode.NodeTarget(shift, thisFacing, worldIn.getBlockState(shift), worldIn.getTileEntity(shift))
         }
     }
-
-    data class NodeTarget(val pos: BlockPos, val facing: EnumFacing, val state: IBlockState, val tile: TileEntity?)
 
     init {
         blockHardness = 1f
@@ -78,7 +77,7 @@ abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDat
     override fun createBlockState() = BlockStateContainer(this, FACING)
 
     override fun getMetaFromState(state: IBlockState) = state.getValue(FACING).index
-    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, VALUES[meta % 6])
+    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, EnumFacing.getFront(meta))
 
     override fun isFullCube(state: IBlockState) = false
     override fun isOpaqueCube(blockState: IBlockState) = false
@@ -108,7 +107,7 @@ abstract class BlockBaseNode(name: String) : BlockMod(name, Material.IRON), IDat
                     mapOf(JsonGenerationUtils.getPathForBlockModel(this)
                             to json {
                         obj(
-                                "parent" to "ccomp:block/node",
+                                "parent" to "ccomp:block/interaction",
                                 "textures" to obj(
                                         "texture" to name
                                 )

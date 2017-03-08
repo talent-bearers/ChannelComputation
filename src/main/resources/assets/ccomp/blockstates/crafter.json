@@ -1,0 +1,29 @@
+{
+	"variants": {
+		"attachment=down": {
+			"model": "ccomp:crafting_chamber"
+		},
+		"attachment=up": {
+			"model": "ccomp:crafting_chamber",
+			"x": 180
+		},
+		"attachment=north": {
+			"model": "ccomp:crafting_chamber",
+			"x": 270
+		},
+		"attachment=south": {
+			"model": "ccomp:crafting_chamber",
+			"x": 90
+		},
+		"attachment=west": {
+			"model": "ccomp:crafting_chamber",
+			"x": 90,
+			"y": 90
+		},
+		"attachment=east": {
+			"model": "ccomp:crafting_chamber",
+			"x": 90,
+			"y": 270
+		}
+	}
+}

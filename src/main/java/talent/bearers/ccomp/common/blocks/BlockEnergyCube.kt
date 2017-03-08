@@ -35,6 +35,7 @@ import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.misc.IPulsarUsable
 import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.api.pathing.IDataNode
+import talent.bearers.ccomp.common.core.ContainerBlockCC
 import talent.bearers.ccomp.common.core.FluidStack
 import talent.bearers.ccomp.common.items.ItemPulsar
 import talent.bearers.ccomp.common.packets.EnergyPacket
@@ -44,7 +45,7 @@ import talent.bearers.ccomp.common.packets.SignalPacket
  * @author WireSegal
  * Created at 10:19 AM on 3/7/17.
  */
-class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_cube", "creative_cube"), IPulsarUsable, IDataNode {
+class BlockEnergyCube : ContainerBlockCC("energy_cube", Material.IRON, "energy_cube", "creative_cube"), IPulsarUsable, IDataNode {
 
     companion object {
         val CREATIVE: PropertyBool = PropertyBool.create("creative")
@@ -57,15 +58,12 @@ class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_
     fun getPacket(strength: Int, pos: BlockPos, world: IBlockAccess, ghost: Boolean): IPacket? {
         val tile = (world.getTileEntity(pos) as? TileEnergyCube) ?: return null
         val capability = tile.cell
-        val amount = if (strength == -1) Int.MAX_VALUE else strength
-        val takenAmount = capability.extractEnergy(amount, ghost)
-        if (takenAmount != 0 && !ghost) tile.markDirty()
-        return EnergyPacket(takenAmount, ghost)
+        return EnergyPacket.fromEnergyStorage(strength, capability, ghost, tile)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
         val capability = (world.getTileEntity(pos) as? TileEnergyCube)?.cell ?: return null
-        return SignalPacket(capability.energyStored.toFloat() / capability.maxEnergyStored)
+        return SignalPacket.fromEnergyStorage(capability)
     }
 
     override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
@@ -117,7 +115,7 @@ class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_
         return !worldIn.getBlockState(pos).getValue(CREATIVE)
     }
 
-    override fun getHUDOverlay(playerIn: EntityPlayer, worldIn: World, pos: BlockPos, ray: RayTraceResult): String? {
+    override fun performHUDOverlay(playerIn: EntityPlayer, worldIn: World, pos: BlockPos, ray: RayTraceResult, resolution: Any): String? {
         val value = if (worldIn.getBlockState(pos).getValue(CREATIVE))
             "∞"
         else {
@@ -125,13 +123,6 @@ class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_
             "${cell.energyStored} / ${cell.maxEnergyStored}"
         }
         return TooltipHelper.local("$MODID.hud.energy", value)
-    }
-
-    override fun addInformation(stack: ItemStack, player: EntityPlayer?, tooltip: MutableList<String>, advanced: Boolean) {
-        if (ItemNBTHelper.verifyExistence(stack, "energy")) {
-            val energy = ItemNBTHelper.getInt(stack, "energy", 0)
-            TooltipHelper.addToTooltip(tooltip, "$MODID.hud.energy", energy)
-        }
     }
 
     override fun onBlockPlacedBy(worldIn: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack) {
@@ -144,6 +135,9 @@ class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_
     }
 
     override fun customDropImplementation(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean {
+        val state = worldIn.getBlockState(pos)
+        if (state.getValue(CREATIVE)) return false
+
         val drop = ItemStack(this)
         val tile = worldIn.getTileEntity(pos) as? TileEnergyCube ?: return false
         ItemNBTHelper.setInt(drop, "energy", tile.cell.energyStored)
@@ -151,9 +145,17 @@ class BlockEnergyCube : BlockModContainer("energy_cube", Material.IRON, "energy_
         return true
     }
 
+    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
+        if (ItemNBTHelper.verifyExistence(stack, "energy")) {
+            val energy = ItemNBTHelper.getInt(stack, "energy", 0)
+            TooltipHelper.addToTooltip(tooltip, "$MODID.hud.energy", energy)
+        }
+        super.addInformation(stack, player, tooltip, advanced)
+    }
+
     @TileRegister("energy_cube")
     class TileEnergyCube(val creative: Boolean = false) : TileMod() {
-        val cell = if (creative) InfiniteWrapper(1000000) else EnergyStorageWrapper(100000, 2500)
+        val cell = if (creative) InfiniteWrapper(1000000000) else EnergyStorageWrapper(100000, 2500)
 
         open class EnergyStorageWrapper(capacity: Int, maxIn: Int = capacity, maxOut: Int = maxIn): EnergyStorage(capacity, maxIn, maxOut) {
             fun setEnergy(energy: Int) {

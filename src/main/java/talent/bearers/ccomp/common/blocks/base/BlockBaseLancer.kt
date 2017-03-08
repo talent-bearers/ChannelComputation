@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.base
 
 import com.teamwizardry.librarianlib.client.core.JsonGenerationUtils
 import com.teamwizardry.librarianlib.client.core.ModelHandler
@@ -27,13 +27,14 @@ import net.minecraft.world.World
 import net.minecraft.world.WorldServer
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.packet.IPacket
-import talent.bearers.ccomp.common.blocks.BlockBaseNode.Companion.FACING
+import talent.bearers.ccomp.common.core.BlockCC
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode.Companion.FACING
 
 /**
  * @author WireSegal
  * Created at 11:00 AM on 3/2/17.
  */
-abstract class BlockBaseLancer(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
+abstract class BlockBaseLancer(name: String) : BlockCC(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
         val UP_AABB    = AxisAlignedBB(6 / 16.0, 9 / 16.0, 6 / 16.0, 10 / 16.0,      1.0, 10 / 16.0)
         val DOWN_AABB  = AxisAlignedBB(6 / 16.0,      0.0, 6 / 16.0, 10 / 16.0, 7 / 16.0, 10 / 16.0)
@@ -74,12 +75,6 @@ abstract class BlockBaseLancer(name: String) : BlockMod(name, Material.IRON), ID
         blockHardness = 1f
     }
 
-    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        TooltipHelper.tooltipIfShift(tooltip) {
-            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
-        }
-    }
-
     // Lancers are read-only.
     override final fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer) = null
     override final fun pushPacket(packet: IPacket, pos: BlockPos, world: WorldServer) = packet
@@ -89,7 +84,7 @@ abstract class BlockBaseLancer(name: String) : BlockMod(name, Material.IRON), ID
     override fun createBlockState() = BlockStateContainer(this, FACING)
 
     override fun getMetaFromState(state: IBlockState) = state.getValue(FACING).index
-    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, VALUES[meta % 6])
+    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, EnumFacing.getFront(meta))
 
     override fun isFullCube(state: IBlockState) = false
     override fun isOpaqueCube(blockState: IBlockState) = false

@@ -38,6 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.api.pathing.IDataNode
+import talent.bearers.ccomp.common.core.ContainerBlockCC
 import talent.bearers.ccomp.common.core.FluidStack
 import talent.bearers.ccomp.common.packets.FluidPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
@@ -51,7 +52,7 @@ import javax.annotation.Nonnull
  * @author WireSegal
  * Created at 4:25 PM on 3/6/17.
  */
-class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPulsarUsable, IDataNode {
+class BlockFluidColumn : ContainerBlockCC("fluid_column", Material.GLASS), IPulsarUsable, IDataNode {
     init {
         setHardness(1f)
     }
@@ -65,33 +66,12 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
     fun getPacket(strength: Int, pos: BlockPos, world: IBlockAccess, ghost: Boolean): IPacket? {
         val tile = world.getTileEntity(pos) as? TileFluidColumn ?: return null
         val capability = tile.tank
-        val fluids = mutableListOf<FluidStack>()
-        var toTake = if (strength == -1) Int.MAX_VALUE else strength
-        val toTakeOrig = toTake
-        for (i in capability.tankProperties) {
-            val stack = i.contents ?: continue
-            val copied = stack.copy()
-            copied.amount = toTake
-            val taken = capability.drain(copied, !ghost)
-            if (taken != null && taken.amount != 0) {
-                fluids.add(taken)
-                toTake -= taken.amount
-            }
-        }
-        if (toTake != toTakeOrig && !ghost) tile.markDirty()
-        return FluidPacket(fluids, ghost)
+        return FluidPacket.fromFluidHandler(strength, capability, ghost, tile)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
         val capability = (world.getTileEntity(pos) as? TileFluidColumn)?.tank ?: return null
-        var percent = 0f
-        var tanks = 0
-        for (i in capability.tankProperties) {
-            percent += (i.contents?.amount ?: 0).toFloat() / i.capacity
-            tanks++
-        }
-        percent /= tanks
-        return SignalPacket(percent)
+        return SignalPacket.fromFluidHandler(capability)
     }
 
     override fun requestReadPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer): IPacket? {
@@ -117,16 +97,17 @@ class BlockFluidColumn : BlockModContainer("fluid_column", Material.GLASS), IPul
 
     override fun createTileEntity(world: World, state: IBlockState) = TileFluidColumn()
 
-    override fun getHUDOverlay(playerIn: EntityPlayer, worldIn: World, pos: BlockPos, ray: RayTraceResult): String? {
+    override fun performHUDOverlay(playerIn: EntityPlayer, worldIn: World, pos: BlockPos, ray: RayTraceResult, resolution: Any): String? {
         val fluid = (worldIn.getTileEntity(pos) as? TileFluidColumn)?.tank?.fluid ?: return TooltipHelper.local("$MODID.hud.nofluid")
         return TooltipHelper.local("$MODID.hud.fluid", fluid.amount, fluid.localizedName)
     }
 
-    override fun addInformation(stack: ItemStack, player: EntityPlayer?, tooltip: MutableList<String>, advanced: Boolean) {
+    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
         if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
             val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
             TooltipHelper.addToTooltip(tooltip, "$MODID.hud.fluid", fluid.amount, fluid.localizedName)
         }
+        super.addInformation(stack, player, tooltip, advanced)
     }
 
     override fun onBlockPlacedBy(worldIn: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack) {

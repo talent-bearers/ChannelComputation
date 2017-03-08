@@ -6,13 +6,14 @@ import com.teamwizardry.librarianlib.common.base.item.ItemMod
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
+import talent.bearers.ccomp.common.core.ItemCC
 import java.awt.Color
 
 /**
  * @author WireSegal
  * Created at 2:32 PM on 3/5/17.
  */
-class ItemEncodedDisk : ItemMod("disk", *VARIANTS), IItemColorProvider {
+class ItemEncodedDisk : ItemCC("disk", *VARIANTS), IItemColorProvider {
     companion object {
         val VARIANTS = arrayOf(
                 "basic_disk",

@@ -5,6 +5,8 @@ import net.minecraft.block.Block
 import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraftforge.oredict.OreDictionary
+import talent.bearers.ccomp.common.blocks.nodes.*
+import talent.bearers.ccomp.common.core.BlockCC
 
 /**
  * @author WireSegal
@@ -21,7 +23,11 @@ object ModBlocks {
     val ENERGY_LANCER = BlockEnergyLancer()
     val ITEM_INTERACTION = BlockItemInteraction()
     val FLUID_INTERACTION = BlockFluidInteraction()
-    val METAL_BLOCK: Block = BlockMod("metal_block", Material.IRON).setHardness(5.0F).setResistance(10.0F).apply { OreDictionary.registerOre("blockComputationAlloy", this) }
+    val ITEM_EXISTENCE = BlockItemExistence()
+
     val TANK = BlockFluidColumn()
     val CUBE = BlockEnergyCube()
+    val CRAFTER = BlockCrafter()
+
+    val METAL_BLOCK: Block = BlockCC("metal_block", Material.IRON).setHardness(5.0F).setResistance(10.0F).apply { OreDictionary.registerOre("blockComputationAlloy", this) }
 }

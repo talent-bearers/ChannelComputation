@@ -3,6 +3,7 @@ package talent.bearers.ccomp.common.items
 import com.teamwizardry.librarianlib.common.base.item.ItemMod
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
+import talent.bearers.ccomp.common.core.ItemCC
 
 /**
  * @author WireSegal
@@ -11,7 +12,8 @@ import net.minecraftforge.oredict.OreDictionary
 object ModItems {
     val PULSAR = ItemPulsar()
     val DISK = ItemEncodedDisk()
-    val METAL = ItemMod("metal", "metal", "metal_blend")
+    val METAL = ItemCC("metal", "metal", "metal_blend")
+    val PLACEHOLDER = ItemCC("placeholder").apply { containerItem = this }
 
     init {
         OreDictionary.registerOre("ingotComputationAlloy", ItemStack(METAL, 1, 0))

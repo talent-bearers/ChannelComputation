@@ -1,5 +1,6 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -8,6 +9,7 @@ import net.minecraftforge.energy.CapabilityEnergy
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode
 import talent.bearers.ccomp.common.packets.EnergyPacket
 import talent.bearers.ccomp.common.packets.FluidPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
@@ -27,35 +29,14 @@ class BlockFluidNode : BlockBaseNode("fluid_node") {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)
-        val fluids = mutableListOf<FluidStack>()
-        var toTake = if (strength == -1) Int.MAX_VALUE else strength
-        val origToTake = toTake
-        for (i in capability.tankProperties) {
-            val stack = i.contents ?: continue
-            val copied = stack.copy()
-            copied.amount = toTake
-            val taken = capability.drain(copied, !ghost)
-            if (taken != null && taken.amount != 0) {
-                fluids.add(taken)
-                toTake -= taken.amount
-            }
-        }
-        if (toTake != origToTake && !ghost) target.tile.markDirty()
-        return FluidPacket(fluids, ghost)
+        return FluidPacket.fromFluidHandler(strength, capability, ghost, target.tile)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, target.facing)
-        var percent = 0f
-        var tanks = 0
-        for (i in capability.tankProperties) {
-            percent += (i.contents?.amount ?: 0).toFloat() / i.capacity
-            tanks++
-        }
-        percent /= tanks
-        return SignalPacket(percent)
+        return SignalPacket.fromFluidHandler(capability)
     }
 
 

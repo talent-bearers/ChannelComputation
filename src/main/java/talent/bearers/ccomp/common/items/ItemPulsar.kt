@@ -25,12 +25,13 @@ import talent.bearers.ccomp.api.pathing.ICableConnectible
 import talent.bearers.ccomp.api.pathing.ICrawlableCable
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.pathing.PathCrawler
+import talent.bearers.ccomp.common.core.ItemCC
 
 /**
  * @author WireSegal
  * Created at 10:47 AM on 3/2/17.
  */
-class ItemPulsar : ItemMod("ghost_pulsar") {
+class ItemPulsar : ItemCC("ghost_pulsar") {
     init {
         setMaxStackSize(1)
     }
@@ -50,7 +51,7 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
                         (block.block is IPulsarUsable &&
                                 (block.block as IPulsarUsable).shouldBreak(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))) ) {
             if (!worldIn.isRemote) {
-                if (!(block.block as IPulsarUsable).customDropImplementation(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))
+                if (block.block !is IPulsarUsable || !(block.block as IPulsarUsable).customDropImplementation(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))
                     block.block.dropBlockAsItem(worldIn, pos, block, 0)
                 worldIn.setBlockState(pos, Blocks.AIR.defaultState)
                 worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f)
@@ -92,11 +93,5 @@ class ItemPulsar : ItemMod("ghost_pulsar") {
         } else if (block.block is IPulsarUsable)
             return (block.block as IPulsarUsable).onPulsarUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)
         return EnumActionResult.PASS
-    }
-
-    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        TooltipHelper.tooltipIfShift(tooltip) {
-            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
-        }
     }
 }

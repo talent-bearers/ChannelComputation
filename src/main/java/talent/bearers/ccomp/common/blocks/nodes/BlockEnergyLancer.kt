@@ -1,5 +1,6 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -7,6 +8,7 @@ import net.minecraft.world.WorldServer
 import net.minecraftforge.energy.CapabilityEnergy
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseLancer
 import talent.bearers.ccomp.common.packets.EnergyPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
 
@@ -25,10 +27,9 @@ class BlockEnergyLancer : BlockBaseLancer("energy_lancer") {
         val target = getTarget(pos, world) { pos, tile, facing ->
             tile?.hasCapability(CapabilityEnergy.ENERGY, facing) ?: false
         }
-        val amount = if (strength == -1) Int.MAX_VALUE else strength
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        return EnergyPacket(capability.extractEnergy(amount, true), ghost = true)
+        return EnergyPacket.fromEnergyStorage(strength, capability, true)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
@@ -37,6 +38,6 @@ class BlockEnergyLancer : BlockBaseLancer("energy_lancer") {
         }
         if (target.tile == null || !target.tile.hasCapability(CapabilityEnergy.ENERGY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityEnergy.ENERGY, target.facing)
-        return SignalPacket(capability.energyStored.toFloat() / capability.maxEnergyStored)
+        return SignalPacket.fromEnergyStorage(capability)
     }
 }

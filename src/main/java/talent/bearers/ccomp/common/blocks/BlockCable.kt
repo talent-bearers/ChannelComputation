@@ -18,13 +18,14 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import talent.bearers.ccomp.api.pathing.ICrawlableCable
+import talent.bearers.ccomp.common.core.BlockCC
 
 
 /**
  * @author WireSegal
  * Created at 9:05 PM on 3/1/17.
  */
-class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
+class BlockCable : BlockCC("cable", Material.IRON), ICrawlableCable {
 
     companion object {
         val UP: PropertyBool = PropertyBool.create("up")
@@ -84,13 +85,6 @@ class BlockCable : BlockMod("cable", Material.IRON), ICrawlableCable {
 
     override fun collisionRayTrace(blockState: IBlockState, worldIn: World, pos: BlockPos, start: Vec3d, end: Vec3d): RayTraceResult? {
         return getBoxes(blockState, worldIn, pos).mapNotNull { rayTrace(pos, start, end, it) }.maxBy { it.hitVec.squareDistanceTo(end) }
-    }
-
-
-    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        TooltipHelper.tooltipIfShift(tooltip) {
-            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
-        }
     }
 
     override fun isFullCube(state: IBlockState) = false

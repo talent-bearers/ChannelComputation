@@ -20,6 +20,7 @@ import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.common.core.FluidStack
 import talent.bearers.ccomp.common.core.ItemStack
 import talent.bearers.ccomp.common.core.count
+import talent.bearers.ccomp.common.core.isEmpty
 import talent.bearers.ccomp.common.packets.ItemPacket.Companion.getItems
 
 /**
@@ -31,6 +32,38 @@ class SignalPacket(val strength: Int) : IPacket {
 
     companion object {
         fun getStrength(packet: IPacket) = packet.data.getInteger("strength")
+
+        fun fromItemHandler(capability: IItemHandler): IPacket {
+            var percent = 0f
+            for (i in 0 until capability.slots) {
+                val inSlot = capability.getStackInSlot(i)
+                percent += inSlot.count.toFloat() / getMaxStackSize(i, capability, inSlot)
+            }
+            percent /= capability.slots
+            return SignalPacket(percent)
+        }
+
+        fun fromEnergyStorage(capability: IEnergyStorage)
+                = SignalPacket(capability.energyStored.toFloat() / capability.maxEnergyStored)
+
+        fun fromFluidHandler(capability: IFluidHandler): IPacket {
+            var percent = 0f
+            var tanks = 0
+            for (i in capability.tankProperties) {
+                percent += (i.contents?.amount ?: 0).toFloat() / i.capacity
+                tanks++
+            }
+            percent /= tanks
+            return SignalPacket(percent)
+        }
+
+        private fun getMaxStackSize(slot: Int, handler: IItemHandler, inSlot: ItemStack?): Int {
+            if (inSlot == null || inSlot.isEmpty) return 64
+            val stack = inSlot.copy()
+            stack.count = inSlot.maxStackSize - inSlot.count
+            val result = handler.insertItem(slot, stack, true)
+            return inSlot.maxStackSize - result.count
+        }
     }
 
     val nbt = nbt {
@@ -55,6 +88,21 @@ class ItemPacket(vararg val items: ItemStack, val ghost: Boolean = false) : IPac
     constructor(items: List<ItemStack>, ghost: Boolean = false) : this(*items.toTypedArray(), ghost = ghost)
 
     companion object {
+        fun fromItemHandler(strength: Int, handler: IItemHandler, ghost: Boolean, tileEntity: TileEntity? = null): IPacket {
+            val stacks = mutableListOf<ItemStack>()
+            var toTake = if (strength == -1) Int.MAX_VALUE else strength
+            val origToTake = toTake
+            for (i in 0 until handler.slots) {
+                val taken = handler.extractItem(i, toTake, ghost)
+                if (!taken.isEmpty) {
+                    stacks.add(taken)
+                    toTake -= taken.count
+                }
+            }
+            if (origToTake != toTake && !ghost) tileEntity?.markDirty()
+            return ItemPacket(stacks, ghost)
+        }
+
         fun getItems(packet: IPacket): List<ItemStack> {
             val nbt = packet.data
             val list = nbt.getTagList("items", NBTTypes.COMPOUND)
@@ -63,10 +111,10 @@ class ItemPacket(vararg val items: ItemStack, val ghost: Boolean = false) : IPac
             return ret
         }
 
-        fun transfer(packet: IPacket, items: IItemHandler, tileEntity: TileEntity): IPacket? {
+        fun transfer(packet: IPacket, items: IItemHandler, tileEntity: TileEntity? = null): IPacket? {
             if (packet.isGhost) return null
             val newItems = getItems(packet).mapNotNull { ItemHandlerHelper.insertItem(items, it, false) }
-            tileEntity.markDirty()
+            tileEntity?.markDirty()
             if (newItems.isEmpty()) return null
 
             return ItemPacket(newItems)
@@ -117,7 +165,7 @@ class FluidPacket(vararg val fluids: FluidStack, val ghost: Boolean = false): IP
             return ret
         }
 
-        fun transfer(packet: IPacket, fluids: IFluidHandler, tileEntity: TileEntity): IPacket? {
+        fun transfer(packet: IPacket, fluids: IFluidHandler, tileEntity: TileEntity? = null): IPacket? {
             if (packet.isGhost) return null
             val newFluids = getFluids(packet).mapNotNull {
                 val stack = it.copy()
@@ -126,10 +174,28 @@ class FluidPacket(vararg val fluids: FluidStack, val ghost: Boolean = false): IP
 
                 if (stack.amount <= 0) null else stack
             }
-            tileEntity.markDirty()
+            tileEntity?.markDirty()
             if (newFluids.isEmpty()) return null
 
             return FluidPacket(newFluids)
+        }
+
+        fun fromFluidHandler(strength: Int, capability: IFluidHandler, ghost: Boolean, tileEntity: TileEntity? = null): IPacket {
+            val fluids = mutableListOf<FluidStack>()
+            var toTake = if (strength == -1) Int.MAX_VALUE else strength
+            val origToTake = toTake
+            for (i in capability.tankProperties) {
+                val stack = i.contents ?: continue
+                val copied = stack.copy()
+                copied.amount = toTake
+                val taken = capability.drain(copied, !ghost)
+                if (taken != null && taken.amount != 0) {
+                    fluids.add(taken)
+                    toTake -= taken.amount
+                }
+            }
+            if (toTake != origToTake && !ghost) tileEntity?.markDirty()
+            return FluidPacket(fluids, ghost)
         }
     }
 
@@ -158,13 +224,20 @@ class EnergyPacket(val energy: Int, val ghost: Boolean = false): IPacket {
     companion object {
         fun getEnergy(packet: IPacket) = packet.data.getInteger("energy")
 
-        fun transfer(packet: IPacket, energy: IEnergyStorage, tileEntity: TileEntity): IPacket? {
+        fun transfer(packet: IPacket, energy: IEnergyStorage, tileEntity: TileEntity? = null): IPacket? {
             if (packet.isGhost) return null
             val stored = getEnergy(packet)
             val amountTaken = energy.receiveEnergy(stored, false)
-            tileEntity.markDirty()
+            tileEntity?.markDirty()
             if (amountTaken == stored) return null
             return EnergyPacket(stored - amountTaken)
+        }
+
+        fun fromEnergyStorage(strength: Int, capability: IEnergyStorage, ghost: Boolean, tileEntity: TileEntity? = null): IPacket {
+            val amount = if (strength == -1) Int.MAX_VALUE else strength
+            val amountTaken = capability.extractEnergy(amount, ghost)
+            if (amountTaken != 0 && !ghost) tileEntity?.markDirty()
+            return EnergyPacket(amountTaken, ghost)
         }
     }
 

@@ -1,7 +1,6 @@
 package talent.bearers.ccomp.api.misc;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +22,7 @@ public interface IPulsarUsable {
     }
 
     @Nullable
-    default String getHUDOverlay(@NotNull EntityPlayer playerIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull RayTraceResult ray) {
+    default String performHUDOverlay(@NotNull EntityPlayer playerIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull RayTraceResult ray, @NotNull Object resolution) {
         return null;
     }
 

@@ -1,7 +1,8 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
 import net.minecraft.block.BlockLiquid
 import net.minecraft.init.SoundEvents
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -11,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.FluidUtil
 import net.minecraftforge.fluids.IFluidBlock
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseInteraction
 import talent.bearers.ccomp.common.packets.FluidPacket
 import talent.bearers.ccomp.common.packets.SignalPacket
 
@@ -29,35 +31,17 @@ class BlockFluidInteraction : BlockBaseInteraction("fluid_interaction") {
         val target = getTarget(pos, world)
         if (target.state.block !is IFluidBlock && target.state.block !is BlockLiquid) return null
         val capability = FluidUtil.getFluidHandler(world, target.pos, target.facing) ?: return null
-        val fluids = mutableListOf<FluidStack>()
-        var toTake = if (strength == -1) Int.MAX_VALUE else strength
-        val original = toTake
-        for (i in capability.tankProperties) {
-            val stack = i.contents ?: continue
-            val taken = capability.drain(stack, !ghost)
-            if (taken != null && taken.amount != 0) {
-                fluids.add(taken)
-                toTake -= taken.amount
-            }
-        }
-        if (original != toTake && !ghost)
+        val ret = FluidPacket.fromFluidHandler(strength, capability, ghost)
+        if (ret.size != 0 && !ghost)
             world.playSound(null, target.pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1f, 1f)
-        if (fluids.isEmpty()) return null
-        return FluidPacket(fluids, ghost)
+        return ret
     }
 
     fun getTotalStrength(pos: BlockPos, world: World): IPacket? {
         val target = getTarget(pos, world)
         if (target.state.block !is IFluidBlock && target.state.block !is BlockLiquid) return null
         val capability = FluidUtil.getFluidHandler(world, target.pos, target.facing) ?: return null
-        var percent = 0f
-        var tanks = 0
-        for (i in capability.tankProperties) {
-            percent += (i.contents?.amount ?: 0).toFloat() / i.capacity
-            tanks++
-        }
-        percent /= tanks
-        return SignalPacket(percent)
+        return SignalPacket.fromFluidHandler(capability)
     }
 
     override fun requestPullPacket(packetType: String, strength: Int, pos: BlockPos, world: WorldServer)

@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
 import com.mojang.authlib.GameProfile
 import net.minecraft.entity.player.EntityPlayer
@@ -13,6 +13,8 @@ import net.minecraftforge.common.util.FakePlayer
 import net.minecraftforge.common.util.FakePlayerFactory
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseInteraction
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode
 import talent.bearers.ccomp.common.core.EMPTY
 import talent.bearers.ccomp.common.core.isEmpty
 import talent.bearers.ccomp.common.packets.ItemPacket

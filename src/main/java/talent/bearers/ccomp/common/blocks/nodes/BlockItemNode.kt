@@ -1,7 +1,8 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -11,6 +12,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler
 import net.minecraftforge.items.CapabilityItemHandler
 import net.minecraftforge.items.IItemHandler
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode
 import talent.bearers.ccomp.common.core.count
 import talent.bearers.ccomp.common.core.isEmpty
 import talent.bearers.ccomp.common.packets.FluidPacket
@@ -32,31 +34,14 @@ class BlockItemNode : BlockBaseNode("item_node") {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)
-        val stacks = mutableListOf<ItemStack>()
-        var toTake = if (strength == -1) Int.MAX_VALUE else strength
-        val origToTake = toTake
-        for (i in 0 until capability.slots) {
-            val taken = capability.extractItem(i, toTake, ghost)
-            if (!taken.isEmpty) {
-                stacks.add(taken)
-                toTake -= taken.count
-            }
-        }
-        if (origToTake != toTake && !ghost) target.tile.markDirty()
-        return ItemPacket(stacks, ghost)
+        return ItemPacket.fromItemHandler(strength, capability, ghost, target.tile)
     }
 
     fun getTotalStrength(pos: BlockPos, world: IBlockAccess): IPacket? {
         val target = getTarget(pos, world)
         if (target.tile == null || !target.tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)) return null
         val capability = target.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, target.facing)
-        var percent = 0f
-        for (i in 0 until capability.slots) {
-            val inSlot = capability.getStackInSlot(i)
-            percent += inSlot.count.toFloat() / getMaxStackSize(i, capability, inSlot)
-        }
-        percent /= capability.slots
-        return SignalPacket(percent)
+        return SignalPacket.fromItemHandler(capability)
     }
 
     fun getMaxStackSize(slot: Int, handler: IItemHandler, inSlot: ItemStack?): Int {

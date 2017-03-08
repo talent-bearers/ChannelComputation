@@ -20,12 +20,22 @@ item.ccomp:metal_blend.name=Semiconductive Steel Blend
 tile.ccomp:metal_block.name=Block of Semiconductive Steel
 
 tile.ccomp:fluid_column.name=Fluid Storage Column
+tile.ccomp:fluid_column.desc=Stores up to 4 buckets worth of fluid. Acts like a fluid node from the top and bottom.
 tile.ccomp:energy_cube.name=Energy Storage Cube
+tile.ccomp:energy_cube.desc=Stores up to 100k units of Energy. Acts like an Energy node from all sides.
 tile.ccomp:creative_cube.name=Infinite Energy Storage Cube
+tile.ccomp:creative_cube.desc=Provides infinite energy, with max throughput of 1b. Acts like an Energy node from all sides.
+tile.ccomp:crafter.name=Matrix Combiner
+tile.ccomp:crafter.desc=Crafts items from the inputs added in.
+
+item.ccomp:placeholder.name=Crafting Matrix Separator
+item.ccomp:placeholder.desc=Acts like an empty slot for Matrix Combiners.
 
 ccomp.hud.energy=%s Energy
 ccomp.hud.fluid=%sx %s
 ccomp.hud.nofluid=Empty
+ccomp.hud.output=Has Output
+ccomp.hud.nooutput=Output Slots Empty
 
 itemGroup.ccomp=Channel Computation
 
@@ -52,6 +62,9 @@ tile.ccomp:fluid_interaction.name=Interactive Data Node - Fluids
 tile.ccomp:fluid_interaction.desc=Can read and write fluids from a fluid block in front of it. It can only read/write in 1000 strength intervals.
 tile.ccomp:item_interaction.name=Interactive Data Node - Items
 tile.ccomp:item_interaction.desc=Can read and write block items from the block in front of it. It can only write in 1 strength intervals.
+
+tile.ccomp:item_existence.name=Existence Data Node - Items
+tile.ccomp:item_existence.desc=Can read and write items from the world around it, within 7 blocks of the node.
 
 ccomp.command.request.usage=/request-packet <x> <y> <z> <strength> <type> <pull|read> <id>
 ccomp.command.request.nonode=No nodes found on network

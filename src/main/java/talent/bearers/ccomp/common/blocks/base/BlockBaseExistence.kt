@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.base
 
 import com.teamwizardry.librarianlib.client.core.JsonGenerationUtils
 import com.teamwizardry.librarianlib.client.core.ModelHandler
@@ -26,22 +26,23 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import talent.bearers.ccomp.api.pathing.IDataNode
 import talent.bearers.ccomp.api.packet.IPacket
-import talent.bearers.ccomp.common.blocks.BlockBaseNode.Companion.FACING
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode.Companion.FACING
+import talent.bearers.ccomp.common.core.BlockCC
 
 /**
  * @author WireSegal
  * Created at 11:00 AM on 3/2/17.
  */
-abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON), IDataNode, IModelGenerator {
+abstract class BlockBaseExistence(name: String) : BlockCC(name, Material.IRON), IDataNode, IModelGenerator {
     companion object {
-        val UP_AABB    = AxisAlignedBB(5 / 16.0, 10 / 16.0, 5 / 16.0, 11 / 16.0,      1.0, 11 / 16.0)
-        val DOWN_AABB  = AxisAlignedBB(5 / 16.0,       0.0, 5 / 16.0, 11 / 16.0, 6 / 16.0, 11 / 16.0)
+        val UP_AABB    = AxisAlignedBB(5 / 16.0, 7 / 16.0, 5 / 16.0, 11 / 16.0,      1.0, 11 / 16.0)
+        val DOWN_AABB  = AxisAlignedBB(5 / 16.0,      0.0, 5 / 16.0, 11 / 16.0, 9 / 16.0, 11 / 16.0)
 
-        val SOUTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0, 10 / 16.0, 11 / 16.0, 11 / 16.0,      1.0)
-        val NORTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0,       0.0, 11 / 16.0, 11 / 16.0, 6 / 16.0)
+        val SOUTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0, 7 / 16.0, 11 / 16.0, 11 / 16.0,      1.0)
+        val NORTH_AABB = AxisAlignedBB(5 / 16.0, 5 / 16.0,      0.0, 11 / 16.0, 11 / 16.0, 9 / 16.0)
 
-        val EAST_AABB  = AxisAlignedBB(10 / 16.0, 5 / 16.0, 5 / 16.0,      1.0, 11 / 16.0, 11 / 16.0)
-        val WEST_AABB  = AxisAlignedBB(      0.0, 5 / 16.0, 5 / 16.0, 6 / 16.0, 11 / 16.0, 11 / 16.0)
+        val EAST_AABB  = AxisAlignedBB(7 / 16.0, 5 / 16.0, 5 / 16.0,      1.0, 11 / 16.0, 11 / 16.0)
+        val WEST_AABB  = AxisAlignedBB(     0.0, 5 / 16.0, 5 / 16.0, 9 / 16.0, 11 / 16.0, 11 / 16.0)
 
         val AABBS = mapOf(
                 UP to UP_AABB,
@@ -51,24 +52,10 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
                 NORTH to NORTH_AABB,
                 SOUTH to SOUTH_AABB
         )
-
-
-        fun getTarget(pos: BlockPos, worldIn: IBlockAccess): BlockBaseNode.NodeTarget {
-            val thisState = worldIn.getBlockState(pos)
-            val thisFacing = thisState.getValue(FACING).opposite
-            val shift = pos.offset(thisFacing)
-            return BlockBaseNode.NodeTarget(shift, thisFacing, worldIn.getBlockState(shift), worldIn.getTileEntity(shift))
-        }
     }
 
     init {
         blockHardness = 1f
-    }
-
-    override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        TooltipHelper.tooltipIfShift(tooltip) {
-            TooltipHelper.addToTooltip(tooltip, stack.unlocalizedName + ".desc")
-        }
     }
 
     override fun getBoundingBox(state: IBlockState, source: IBlockAccess?, pos: BlockPos?) = AABBS[state.getValue(FACING)]
@@ -76,7 +63,7 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
     override fun createBlockState() = BlockStateContainer(this, FACING)
 
     override fun getMetaFromState(state: IBlockState) = state.getValue(FACING).index
-    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, VALUES[meta % 6])
+    override fun getStateFromMeta(meta: Int) = defaultState.withProperty(FACING, EnumFacing.getFront(meta))
 
     override fun isFullCube(state: IBlockState) = false
     override fun isOpaqueCube(blockState: IBlockState) = false
@@ -106,7 +93,7 @@ abstract class BlockBaseInteraction(name: String) : BlockMod(name, Material.IRON
                     mapOf(JsonGenerationUtils.getPathForBlockModel(this)
                             to json {
                         obj(
-                                "parent" to "ccomp:block/interaction",
+                                "parent" to "ccomp:block/existence",
                                 "textures" to obj(
                                         "texture" to name
                                 )

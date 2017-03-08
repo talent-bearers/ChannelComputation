@@ -126,6 +126,16 @@ object ModRecipes {
                 'P', Blocks.PISTON,
                 'D', Blocks.DROPPER)
 
+        shapedRecipe(ModBlocks.ITEM_EXISTENCE,
+                "EID",
+                "ICO",
+                "COC",
+                'C', "ingotComputationAlloy",
+                'I', "diskItemIn",
+                'O', "diskItemOut",
+                'E', "enderpearl",
+                'D', Blocks.DROPPER)
+
         shapedRecipe(ItemStack(ModBlocks.CABLE, 16),
                 " D ",
                 "DCD",
@@ -149,6 +159,32 @@ object ModRecipes {
                 'G', "blockGlass",
                 'S', "diskFluid",
                 'O', "diskFluidOut")
+
+        shapedRecipe(ModBlocks.CUBE,
+                "CIC",
+                "GSG",
+                "COC",
+                'C', "ingotComputationAlloy",
+                'I', "diskEnergyIn",
+                'G', "ingotGold",
+                'S', "diskEnergy",
+                'O', "diskEnergyOut")
+
+        shapedRecipe(ModBlocks.CRAFTER,
+                "III",
+                "SCS",
+                " O ",
+                'C', "ingotComputationAlloy",
+                'I', "diskItemIn",
+                'S', "diskItem",
+                'O', "diskItemOut")
+
+        shapedRecipe(ItemStack(ModItems.PLACEHOLDER, 32),
+                " S ",
+                "SCS",
+                " S ",
+                'S', "stickWood",
+                'C', "ingotComputationAlloy")
 
         shapedRecipe(ModBlocks.METAL_BLOCK,
                 "III", "III", "III",

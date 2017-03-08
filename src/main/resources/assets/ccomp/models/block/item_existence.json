@@ -1,0 +1,6 @@
+{
+	"parent": "ccomp:block/existence",
+	"textures": {
+		"texture": "ccomp:blocks/item_existence"
+	}
+}

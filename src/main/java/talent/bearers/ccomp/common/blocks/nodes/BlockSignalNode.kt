@@ -1,4 +1,4 @@
-package talent.bearers.ccomp.common.blocks
+package talent.bearers.ccomp.common.blocks.nodes
 
 import com.teamwizardry.librarianlib.common.base.block.TileMod
 import com.teamwizardry.librarianlib.common.util.autoregister.TileRegister
@@ -13,6 +13,7 @@ import net.minecraft.world.World
 import net.minecraft.world.WorldServer
 import net.minecraftforge.event.ForgeEventFactory
 import talent.bearers.ccomp.api.packet.IPacket
+import talent.bearers.ccomp.common.blocks.base.BlockBaseNode
 import talent.bearers.ccomp.common.packets.SignalPacket
 import java.util.*
 
