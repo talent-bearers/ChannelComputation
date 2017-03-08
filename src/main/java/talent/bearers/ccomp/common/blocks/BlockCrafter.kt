@@ -27,7 +27,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.CraftingManager
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.EnumActionResult
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.world.IBlockAccess
@@ -127,6 +129,30 @@ class BlockCrafter : ContainerBlockCC("crafter", Material.IRON), IDataNode, IPul
                     .forEach { spawnItemStack(worldIn, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), it) }
 
         super.breakBlock(worldIn, pos, state)
+    }
+
+    override fun onPulsarUse(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): EnumActionResult {
+        val tile = worldIn.getTileEntity(pos)
+        if (tile is TileCrafter && !worldIn.isRemote) {
+            val empty = (0..tile.handler.slots - 1).any {
+                val inSlot = tile.handler.getStackInSlot(it)
+                !inSlot.isEmpty && inSlot?.item != ModItems.PLACEHOLDER
+            }
+
+            (0..tile.handler.slots - 1)
+                    .map { it to tile.handler.getStackInSlot(it) }
+                    .filter { !it.second.isEmpty && (!empty || it.second?.item != ModItems.PLACEHOLDER) }
+                    .forEach {
+                        tile.handler.setStackInSlot(it.first, EMPTY)
+                        spawnItemStack(worldIn, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), it.second)
+                    }
+        }
+        return EnumActionResult.SUCCESS
+    }
+
+    override fun shouldBreak(stack: ItemStack, playerIn: EntityPlayer, worldIn: World, pos: BlockPos, hand: EnumHand, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean {
+        val existFacing = worldIn.getBlockState(pos).getValue(BlockBaseNode.FACING)
+        return existFacing.opposite != facing
     }
 
     @TileRegister("crafter")

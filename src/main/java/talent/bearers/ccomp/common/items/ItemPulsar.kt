@@ -47,18 +47,18 @@ class ItemPulsar : ItemCC("ghost_pulsar") {
         val pick = block.block.getPickBlock(block, RayTraceResult(RayTraceResult.Type.BLOCK, vec(hitX, hitY, hitZ), facing, pos), worldIn, pos, playerIn)
 
         if (playerIn.isSneaking &&
-                (block.block is ICableConnectible ||
-                        (block.block is IPulsarUsable &&
-                                (block.block as IPulsarUsable).shouldBreak(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))) ) {
-            if (!worldIn.isRemote) {
-                if (block.block !is IPulsarUsable || !(block.block as IPulsarUsable).customDropImplementation(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))
-                    block.block.dropBlockAsItem(worldIn, pos, block, 0)
-                worldIn.setBlockState(pos, Blocks.AIR.defaultState)
-                worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f)
+                (block.block is ICableConnectible || block.block is IPulsarUsable) ) {
+            if (block.block !is IPulsarUsable || (block.block as IPulsarUsable).shouldBreak(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)) {
+                if (!worldIn.isRemote) {
+                    if (block.block !is IPulsarUsable || !(block.block as IPulsarUsable).customDropImplementation(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ))
+                        block.block.dropBlockAsItem(worldIn, pos, block, 0)
+                    worldIn.setBlockState(pos, Blocks.AIR.defaultState)
+                    worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f)
+                }
+                return EnumActionResult.SUCCESS
             }
-            return EnumActionResult.SUCCESS
         }
-        if (block.block is ICableConnectible) {
+        if (block.block is ICableConnectible && !playerIn.isSneaking) {
             if (block.block is ICrawlableCable) {
                 if (!worldIn.isRemote) {
                     ItemNBTHelper.setList(stack, TAG_POS, NBTTagList().apply {
