@@ -33,10 +33,9 @@ object BumpRenderer : TileEntitySpecialRenderer<TileCrafter>() {
             vec(10 / 16.0, 10 / 16.0)
     )
 
-    // val renderStack = ItemStack(ModItems.PLACEHOLDER).apply { ItemNBTHelper.setBoolean(this, "bump", true) }
+     val renderStack = ItemStack(ModItems.PLACEHOLDER).apply { ItemNBTHelper.setBoolean(this, "bump", true) }
 
     override fun renderTileEntityAt(te: TileCrafter, x: Double, y: Double, z: Double, partialTicks: Float, destroyStage: Int) {
-        val renderStack = ItemStack(ModItems.PLACEHOLDER).apply { ItemNBTHelper.setBoolean(this, "bump", true) }
         GlStateManager.pushMatrix()
         GlStateManager.translate(x, y, z)
 
