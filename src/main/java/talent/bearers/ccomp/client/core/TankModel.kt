@@ -36,7 +36,7 @@ class TankModel(val original: IBakedModel) : IBakedModel by original {
 
     val overrideList = object : ItemOverrideList(listOf()) {
         override fun handleItemState(originalModel: IBakedModel, stack: ItemStack, world: World?, entity: EntityLivingBase?): IBakedModel {
-            if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
+            if (stack.hasTagCompound() && ItemNBTHelper.verifyExistence(stack, "fluid")) {
                 val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
                 return getModel(fluid)
             }

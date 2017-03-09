@@ -126,7 +126,7 @@ class BlockEnergyCube : ContainerBlockCC("energy_cube", Material.IRON, "energy_c
     }
 
     override fun onBlockPlacedBy(worldIn: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack) {
-        if (ItemNBTHelper.verifyExistence(stack, "energy")) {
+        if (stack.hasTagCompound() && ItemNBTHelper.verifyExistence(stack, "energy")) {
             val energy = ItemNBTHelper.getInt(stack, "energy", 0)
             val te = worldIn.getTileEntity(pos)
             if (te is TileEnergyCube)
@@ -146,7 +146,7 @@ class BlockEnergyCube : ContainerBlockCC("energy_cube", Material.IRON, "energy_c
     }
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        if (ItemNBTHelper.verifyExistence(stack, "energy")) {
+        if (stack.hasTagCompound() && ItemNBTHelper.verifyExistence(stack, "energy")) {
             val energy = ItemNBTHelper.getInt(stack, "energy", 0)
             TooltipHelper.addToTooltip(tooltip, "$MODID.hud.energy", energy)
         }

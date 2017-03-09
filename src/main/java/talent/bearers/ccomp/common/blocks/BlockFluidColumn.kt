@@ -122,7 +122,7 @@ class BlockFluidColumn : ContainerBlockCC("fluid_column", Material.GLASS), IPuls
     }
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, tooltip: MutableList<String>, advanced: Boolean) {
-        if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
+        if (stack.hasTagCompound() && ItemNBTHelper.verifyExistence(stack, "fluid")) {
             val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
             TooltipHelper.addToTooltip(tooltip, "$MODID.hud.fluid", fluid.amount, fluid.localizedName)
         }
@@ -130,7 +130,7 @@ class BlockFluidColumn : ContainerBlockCC("fluid_column", Material.GLASS), IPuls
     }
 
     override fun onBlockPlacedBy(worldIn: World, pos: BlockPos, state: IBlockState, placer: EntityLivingBase, stack: ItemStack) {
-        if (ItemNBTHelper.verifyExistence(stack, "fluid")) {
+        if (stack.hasTagCompound() && ItemNBTHelper.verifyExistence(stack, "fluid")) {
             val fluid = FluidStack(ItemNBTHelper.getCompound(stack, "fluid", false)!!)
             val te = worldIn.getTileEntity(pos)
             if (te is TileFluidColumn)
