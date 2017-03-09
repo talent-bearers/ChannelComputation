@@ -1,8 +1,11 @@
 package talent.bearers.ccomp.common.blocks
 
+import com.teamwizardry.librarianlib.client.core.ModelHandler
 import com.teamwizardry.librarianlib.client.util.TooltipHelper
 import com.teamwizardry.librarianlib.common.base.block.BlockModContainer
+import com.teamwizardry.librarianlib.common.base.block.ItemModBlock
 import com.teamwizardry.librarianlib.common.base.block.TileMod
+import com.teamwizardry.librarianlib.common.base.item.ISpecialModelProvider
 import com.teamwizardry.librarianlib.common.util.ItemNBTHelper
 import com.teamwizardry.librarianlib.common.util.autoregister.TileRegister
 import com.teamwizardry.librarianlib.common.util.saving.SaveMethodGetter
@@ -10,8 +13,12 @@ import com.teamwizardry.librarianlib.common.util.saving.SaveMethodSetter
 import com.teamwizardry.librarianlib.common.util.sendSpamlessMessage
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.block.model.IBakedModel
+import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
@@ -38,6 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly
 import talent.bearers.ccomp.MODID
 import talent.bearers.ccomp.api.packet.IPacket
 import talent.bearers.ccomp.api.pathing.IDataNode
+import talent.bearers.ccomp.client.core.TankModel
 import talent.bearers.ccomp.common.core.ContainerBlockCC
 import talent.bearers.ccomp.common.core.FluidStack
 import talent.bearers.ccomp.common.packets.FluidPacket
@@ -55,6 +63,17 @@ import javax.annotation.Nonnull
 class BlockFluidColumn : ContainerBlockCC("fluid_column", Material.GLASS), IPulsarUsable, IDataNode {
     init {
         setHardness(1f)
+    }
+
+    override fun createItemForm(): ItemBlock? {
+        return object : ItemModBlock(this), ISpecialModelProvider {
+            @SideOnly(Side.CLIENT)
+            override fun getSpecialModel(index: Int): IBakedModel? {
+                val parent = ModelHandler.resourceLocations[MODID]?.get(ModelHandler.getKey(this, 0)) ?: return null
+                val model = Minecraft.getMinecraft()?.renderItem?.itemModelMesher?.modelManager?.getModel(parent as ModelResourceLocation) ?: return null
+                return TankModel(model)
+            }
+        }
     }
 
     override fun connectionPoint(pos: BlockPos, world: IBlockAccess) = null
